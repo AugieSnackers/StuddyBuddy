@@ -11,19 +11,21 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 public class HomeActivity extends AppCompatActivity {
-    private TextView mStatusTextView;
+    private TextView welcome;
     private Firebase firebase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        welcome = (TextView)findViewById(R.id.textView);
         firebase = new Firebase("https://studdy-buddy.firebaseio.com/name");
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String data = dataSnapshot.getValue(String.class);
-                Toast.makeText(getApplicationContext(), data, Toast.LENGTH_LONG);
+                welcome.setText("welcome to studdy buddy " +data);
+
             }
 
             @Override
