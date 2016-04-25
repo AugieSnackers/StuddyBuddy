@@ -10,14 +10,13 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-public class StatusActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
     private TextView mStatusTextView;
     private Firebase firebase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_status);
-
+        setContentView(R.layout.activity_home);
 
         firebase = new Firebase("https://studdy-buddy.firebaseio.com/name");
         firebase.addValueEventListener(new ValueEventListener() {

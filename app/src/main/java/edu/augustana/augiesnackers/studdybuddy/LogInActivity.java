@@ -6,16 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -74,8 +67,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 Log.d("LOG IN", "LOGGED");
                 startActivityForResult(signInIntent, RC_SIGN_IN);
-                Intent status = new Intent(getApplicationContext(), StatusActivity.class);
-                startActivity(status);
+
             }
         });
         Button signOutButton = (Button)findViewById(R.id.sign_out_button);
@@ -94,19 +86,12 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
             }
         });
-        Button disconnectButton = (Button)findViewById(R.id.disconnect_button);
-        disconnectButton.setOnClickListener(new View.OnClickListener() {
+        Button homeButton = (Button)findViewById(R.id.home_button);
+        homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-                        new ResultCallback<Status>() {
-                            @Override
-                            public void onResult(Status status) {
-                                // [START_EXCLUDE]
-                                updateUI(false);
-                                // [END_EXCLUDE]
-                            }
-                        });
+                Intent status = new Intent(getApplicationContext(), HomeActivity.class);
+                startActivity(status);
             }
         });
     }
@@ -166,6 +151,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
+            mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             updateUI(true);
 
 
