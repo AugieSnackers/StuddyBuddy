@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_id": "studdybuddy-d3d20",
+    "project_number": "811543573577",
+    "name": "studdybuddy"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:811543573577:android:d6cc0de2322cce98",
+        "client_id": "android:edu.augustana.augiesnackers.studdybuddy",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "edu.augustana.augiesnackers.studdybuddy",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "811543573577-r93p5gbcm5n3umha0afha7rnuoegi04g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.augustana.augiesnackers.studdybuddy",
+            "certificate_hash": "CE50C97AA6C041BE06A73FD689CDDFF4C75266F4"
+          }
+        },
+        {
+          "client_id": "811543573577-pd58ar8j2svhah24ogqgeis0s3d3kuse.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
