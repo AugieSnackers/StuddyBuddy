@@ -86,6 +86,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
             }
         });
+        //Takes one to the homepage
         Button homeButton = (Button)findViewById(R.id.home_button);
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +101,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+        //silent sign in
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         if (opr.isDone()) {
             // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
@@ -132,7 +134,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         //TODO
 
     }
-
+//what to do with the feedback
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -161,7 +163,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-
+//change the mainpage to whatver the status of the app is, signed in or not
     private void updateUI(boolean signedIn) {
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);

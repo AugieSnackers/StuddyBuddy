@@ -1,3 +1,4 @@
+<!--the layout closely matches the one in this tutorial //https://github.com/googlesamples/google-services-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"

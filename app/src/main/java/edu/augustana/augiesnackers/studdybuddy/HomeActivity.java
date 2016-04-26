@@ -19,6 +19,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         welcome = (TextView)findViewById(R.id.textView);
+        //an example of how the can link in  firebase, right now firebase just has my name on it
         firebase = new Firebase("https://studdy-buddy.firebaseio.com/name");
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
