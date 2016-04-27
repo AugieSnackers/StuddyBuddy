@@ -25,6 +25,9 @@
     <!-- Button labels -->
     <string name="sign_out">Sign Out</string>
     <string name="HOME">HOME</string>
+    <string name="classes">CLASSES</string>
+    <string name="homework">HOMEWORK</string>
+    <string name="sessions">SESSIONS</string>
 
     <!-- Content Description for images -->
     <string name="desc_study_icon">App Logo</string>
