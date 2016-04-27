@@ -37,7 +37,15 @@
             android:orientation="vertical">
 
 
-                <Button
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#ffffff"
+                android:layout_margin="15dp"/>
+
+            <Button
                     android:id="@+id/class_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
