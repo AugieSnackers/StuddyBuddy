@@ -2,6 +2,7 @@ package edu.augustana.augiesnackers.studdybuddy;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -27,6 +28,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     private GoogleApiClient mGoogleApiClient;
     private ProgressDialog mProgressDialog;
+    Typeface myTypeface;
 
 
     @Override
@@ -35,6 +37,8 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
 
         mStatusTextView = (TextView) findViewById(R.id.status);
+
+        myTypeface = Typeface.createFromAsset(getAssets(), "Roboto-Regular.ttf");
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -95,6 +99,13 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 startActivity(status);
             }
         });
+
+        TextView titleText = (TextView) findViewById(R.id.title_text);
+
+        titleText.setTypeface(myTypeface);
+        mStatusTextView.setTypeface(myTypeface);
+        signOutButton.setTypeface(myTypeface);
+        homeButton.setTypeface(myTypeface);
     }
 
     @Override
