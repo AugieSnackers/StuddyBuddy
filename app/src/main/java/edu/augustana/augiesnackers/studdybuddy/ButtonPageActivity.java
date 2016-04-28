@@ -5,25 +5,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-public class HomeActivity extends AppCompatActivity {
+public class ButtonPageActivity extends AppCompatActivity {
     private TextView welcome;
     private Firebase firebase;
     Typeface myTypeface;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_buttons_page);
         myTypeface = Typeface.createFromAsset(getAssets(), "Roboto-Regular.ttf");
 
         welcome = (TextView)findViewById(R.id.textView);
         //an example of how the can link in  firebase, right now firebase just has my name on it
+
         firebase = new Firebase("https://studdy-buddy.firebaseio.com/name");
         firebase.addValueEventListener(new ValueEventListener() {
             @Override

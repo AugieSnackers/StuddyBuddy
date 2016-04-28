@@ -95,7 +95,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent status = new Intent(getApplicationContext(), HomeActivity.class);
+                Intent status = new Intent(getApplicationContext(), ButtonPageActivity.class);
                 startActivity(status);
             }
         });
