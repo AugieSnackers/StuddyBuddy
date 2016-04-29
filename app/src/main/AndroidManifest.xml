@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ButtonPageActivity" />
-
+        <activity android:name=".FirebaseDataControlActivity"></activity>
     </application>
 
 </manifest>
