@@ -25,16 +25,16 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerViewAdapter  adapter;
     private Firebase firebase;
-    private EditText searchText;
-   // private ImageView searchbtn;
+    private EditText sendText;
+    private ImageView sendbtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Firebase.setAndroidContext(this);
         List<Data> data = fill_with_data();
-        searchText = (EditText) findViewById(R.id.etSearch);
-        //searchbtn = (ImageView) findViewById(R.id.ivSearch);
+        sendText = (EditText) findViewById(R.id.etStatus);
+        sendbtn = (ImageView) findViewById(R.id.ivSend);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         adapter = new RecyclerViewAdapter(data, getApplication());
         recyclerView.setAdapter(adapter);
