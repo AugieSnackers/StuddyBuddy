@@ -18,6 +18,7 @@ public class ButtonPageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Firebase.setAndroidContext(this);
         setContentView(R.layout.activity_buttons_page);
         myTypeface = Typeface.createFromAsset(getAssets(), "Roboto-Regular.ttf");
 
