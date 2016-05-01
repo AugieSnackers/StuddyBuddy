@@ -5,9 +5,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,13 +25,19 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
 //https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/SignInActivity.java#L51-L55
-public class LogInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class LogInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+    static final String USER_NAME ="NAME";
+    static final String USER_PHOTO ="PHOTO";
+    static final String USER_ID ="ID";
     private static final int RC_SIGN_IN = 9001;
     private TextView mStatusTextView;
-
+    private String personName;
+    private String personEmail;
+    private String personId;
+    private Uri personPhoto;
     private GoogleApiClient mGoogleApiClient;
     private ProgressDialog mProgressDialog;
-    Typeface myTypeface;
+    private Typeface myTypeface;
 
 
     @Override
@@ -78,7 +84,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
             }
         });
-        Button signOutButton = (Button)findViewById(R.id.sign_out_button);
+        Button signOutButton = (Button) findViewById(R.id.sign_out_button);
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,12 +101,18 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
         //Takes one to the homepage
-        Button homeButton = (Button)findViewById(R.id.home_button);
+        Button homeButton = (Button) findViewById(R.id.home_button);
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent status = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(status);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Bundle extras = new Bundle();
+                extras.putString(USER_NAME, personName);
+                extras.putString(USER_ID, personId);
+                extras.putParcelable(USER_PHOTO, personPhoto);
+                intent.putExtras(extras);
+                startActivity(intent);
+
             }
         });
 
@@ -138,29 +150,34 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             });
         }
     }
+
     @Override
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
     }
+
     //connection failed, log in manually
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
-                AlertDialog.Builder helpBuilder = new AlertDialog.Builder(this);
-                helpBuilder.setTitle("LOG IN FAIL")
-                        .setMessage("ERROR SIGNING IN. CHECK INTERNET CONNECTIVITY")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {finish();                            }
+        AlertDialog.Builder helpBuilder = new AlertDialog.Builder(this);
+        helpBuilder.setTitle("LOG IN FAIL")
+                .setMessage("ERROR SIGNING IN. CHECK INTERNET CONNECTIVITY")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        finish();
+                    }
 
-                        });
+                });
 
-                AlertDialog helpDialog = helpBuilder.create();
-                helpDialog.show();
+        AlertDialog helpDialog = helpBuilder.create();
+        helpDialog.show();
 
     }
-//what to do with the feedback
+
+    //what to do with the feedback
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -168,6 +185,11 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            GoogleSignInAccount acct = result.getSignInAccount();
+            personName = acct.getDisplayName();
+            personEmail = acct.getEmail();
+            personId = acct.getId();
+            personPhoto = acct.getPhotoUrl();
             handleSignInResult(result);
         }
     }
@@ -180,6 +202,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
+
             updateUI(true);
 
 
@@ -189,7 +212,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-//change the mainpage to whatver the status of the app is, signed in or not
+    //change the mainpage to whatver the status of the app is, signed in or not
     private void updateUI(boolean signedIn) {
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
