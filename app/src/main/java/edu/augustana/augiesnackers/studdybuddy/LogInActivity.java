@@ -1,6 +1,8 @@
 package edu.augustana.augiesnackers.studdybuddy;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -43,6 +45,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
+                .requestProfile()
                 .build();
 
         // Build a GoogleApiClient with access to the Google Sign-In API and the
@@ -143,7 +146,18 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     //connection failed, log in manually
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        //TODO
+
+                AlertDialog.Builder helpBuilder = new AlertDialog.Builder(this);
+                helpBuilder.setTitle("LOG IN FAIL")
+                        .setMessage("ERROR SIGNING IN. CHECK INTERNET CONNECTIVITY")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {finish();                            }
+
+                        });
+
+                AlertDialog helpDialog = helpBuilder.create();
+                helpDialog.show();
 
     }
 //what to do with the feedback

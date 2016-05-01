@@ -6,8 +6,9 @@ import com.firebase.client.Firebase;
  * Created by Nelly on 4/27/2016.
  */
 public class SetFirebase extends android.app.Application {
-    private void OnCreate(){
-      super.onCreate();
-       Firebase.setAndroidContext(this);
-  }
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Firebase.setAndroidContext(this);
+    }
 }

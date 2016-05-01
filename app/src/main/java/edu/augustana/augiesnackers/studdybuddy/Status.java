@@ -8,6 +8,9 @@ public class Status {
     String name;
     String tag;
     String uid;
+    public Status(){
+
+    }
     public  Status(String name,String uid,String message, String tag){
         this.description = message;
         this.name = name;
