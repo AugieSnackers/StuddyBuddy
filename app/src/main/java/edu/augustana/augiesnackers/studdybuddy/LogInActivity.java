@@ -26,15 +26,15 @@ import com.google.android.gms.common.api.Status;
 
 //https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/SignInActivity.java#L51-L55
 public class LogInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
-    static final String USER_NAME ="NAME";
-    static final String USER_PHOTO ="PHOTO";
-    static final String USER_ID ="ID";
+//    static final String USER_NAME ="NAME";
+//    static final String USER_PHOTO ="PHOTO";
+//    static final String USER_ID ="ID";
     private static final int RC_SIGN_IN = 9001;
     private TextView mStatusTextView;
-    private String personName;
-    private String personEmail;
-    private String personId;
-    private Uri personPhoto;
+    static   String personName;
+    static String personEmail;
+    static String personId;
+    static Uri personPhoto;
     private GoogleApiClient mGoogleApiClient;
     private ProgressDialog mProgressDialog;
     private Typeface myTypeface;
@@ -106,11 +106,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                Bundle extras = new Bundle();
-                extras.putString(USER_NAME, personName);
-                extras.putString(USER_ID, personId);
-                extras.putParcelable(USER_PHOTO, personPhoto);
-                intent.putExtras(extras);
                 startActivity(intent);
 
             }

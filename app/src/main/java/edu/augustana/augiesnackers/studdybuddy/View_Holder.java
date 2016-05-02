@@ -1,5 +1,6 @@
 package edu.augustana.augiesnackers.studdybuddy;
 
+import android.graphics.Bitmap;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -37,7 +38,7 @@ public class View_Holder extends RecyclerView.ViewHolder {
         description.setText(text);
     }
 
-    public void setImage(int id) {
-        imageView.setImageResource(id);
+    public void setImage(Bitmap bitmap) {
+        imageView.setImageBitmap(bitmap);
     }
 }

@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText sendText;
     private ImageView sendbtn;
     private Query mStatusRef;
+    static Bitmap mBitmap ;
 
     FirebaseRecyclerAdapter<Status, View_Holder> firebaseAdapter;
 
@@ -38,14 +39,18 @@ public class MainActivity extends AppCompatActivity {
 
         sendText = (EditText) findViewById(R.id.etStatus);
 
-        Intent intent = getIntent();
-        final Bundle extras = intent.getExtras();
-        //Todo Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),  extras.getParcelable(LogInActivity.USER_PHOTO,""));
+        try {
+            mBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), LogInActivity.personPhoto);
+        }catch (Exception e){
+
+        }
+
+
         sendbtn = (ImageView) findViewById(R.id.ivSend);
         sendbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Status status = new Status(extras.getString(LogInActivity.USER_NAME,""), extras.getString(LogInActivity.USER_ID,""), sendText.getText().toString(), "#testing");
+                Status status = new Status(LogInActivity.personName, LogInActivity.personId, sendText.getText().toString(), "#testing");
                 firebase.push().setValue(status, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -75,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
             public void populateViewHolder(View_Holder holder, Status status, int position) {
                 holder.setName(status.getName());
                 holder.setDescription(status.getDescription());
-                holder.setImage(R.drawable.ic_facebook);
+
+               // holder.setImage(mBitmap);
             }
         };
         recyclerView.setAdapter(firebaseAdapter);
