@@ -18,6 +18,7 @@ public class Status {
         this.uid = uid;
 
     }
+
     public String getDescription(){
         return description;   }
     public String getName(){
@@ -27,5 +28,6 @@ public class Status {
     public String getUid(){
         return uid;
     }
+
 
 }

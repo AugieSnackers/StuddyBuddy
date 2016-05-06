@@ -28,7 +28,9 @@ public class MainActivity extends AppCompatActivity {
     private EditText sendText;
     private ImageView sendbtn;
     private Query mStatusRef;
-    static Bitmap mBitmap ;
+    private String userName;
+    private String userID;
+
 
     FirebaseRecyclerAdapter<Status, View_Holder> firebaseAdapter;
 
@@ -38,14 +40,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         sendText = (EditText) findViewById(R.id.etStatus);
-
-
-
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        userName = extras.getString(LogInActivity.USER_NAME);
+        userID = extras.getString(LogInActivity.USER_ID);
         sendbtn = (ImageView) findViewById(R.id.ivSend);
         sendbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Status status = new Status("Nelly Cheboi", "uid", sendText.getText().toString(), "#testing");
+                Status status = new Status(userName, userID, sendText.getText().toString(), "#testing");
                 firebase.push().setValue(status, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -76,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
             public void populateViewHolder(View_Holder holder, Status status, int position) {
                 holder.setName(status.getName());
                 holder.setDescription(status.getDescription());
-
-                holder.setImage(mBitmap);
+                holder.setImage(R.drawable.ic_facebook);
             }
         };
         recyclerView.setAdapter(firebaseAdapter);

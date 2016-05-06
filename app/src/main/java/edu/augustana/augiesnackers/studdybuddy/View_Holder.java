@@ -38,7 +38,7 @@ public class View_Holder extends RecyclerView.ViewHolder {
         description.setText(text);
     }
 
-    public void setImage(Bitmap bitmap) {
-        imageView.setImageBitmap(bitmap);
+    public void setImage(int id) {
+        imageView.setImageResource(id);
     }
 }
