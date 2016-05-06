@@ -31,10 +31,9 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 //    static final String USER_ID ="ID";
     private static final int RC_SIGN_IN = 9001;
     private TextView mStatusTextView;
-    static   String personName;
-    static String personEmail;
-    static String personId;
-    static Uri personPhoto;
+    private   String personName;
+    private String personEmail;
+    private String personId;
     private GoogleApiClient mGoogleApiClient;
     private ProgressDialog mProgressDialog;
     private Typeface myTypeface;
@@ -184,7 +183,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             personName = acct.getDisplayName();
             personEmail = acct.getEmail();
             personId = acct.getId();
-            personPhoto = acct.getPhotoUrl();
             handleSignInResult(result);
         }
     }

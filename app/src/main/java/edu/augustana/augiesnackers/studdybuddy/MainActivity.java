@@ -39,18 +39,13 @@ public class MainActivity extends AppCompatActivity {
 
         sendText = (EditText) findViewById(R.id.etStatus);
 
-        try {
-            mBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), LogInActivity.personPhoto);
-        }catch (Exception e){
-
-        }
 
 
         sendbtn = (ImageView) findViewById(R.id.ivSend);
         sendbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Status status = new Status(LogInActivity.personName, LogInActivity.personId, sendText.getText().toString(), "#testing");
+                Status status = new Status("Nelly Cheboi", "uid", sendText.getText().toString(), "#testing");
                 firebase.push().setValue(status, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -64,10 +59,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         firebase = new Firebase("https://studdy-buddy.firebaseio.com/Status");
-        mStatusRef = firebase.limitToLast(10);
+        mStatusRef = firebase.orderByChild("timestamp").limitToLast(10);
         firebaseAdapter = new FirebaseRecyclerAdapter<Status, View_Holder>(Status.class, R.layout.card_view, View_Holder.class, mStatusRef) {
             @Override
             public View_Holder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -81,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 holder.setName(status.getName());
                 holder.setDescription(status.getDescription());
 
-               // holder.setImage(mBitmap);
+                holder.setImage(mBitmap);
             }
         };
         recyclerView.setAdapter(firebaseAdapter);
