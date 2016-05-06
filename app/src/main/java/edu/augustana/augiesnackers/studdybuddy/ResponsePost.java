@@ -1,16 +1,14 @@
 package edu.augustana.augiesnackers.studdybuddy;
 
 /**
- * @author greg
- * @since 6/21/13
  * Adapted by Scott Doberstein
  */
 public class ResponsePost {
-    private int postID;
-    private String message;
-    private String author;
-    private int topicID;
-    private int timeStamp;
+    String description;
+    String name;
+    String tag;
+    String uid;
+    String topicPost; //make this a Status object pass in?
 
     //private TopicPost postTopic;
 
@@ -19,24 +17,27 @@ public class ResponsePost {
     private ResponsePost() {
     }
 
-    ResponsePost(String message, String author, int postID, int topicID) {
-        this.postID = postID;
-        this.message = message;
-        this.author = author;
-        this.topicID = topicID;
+    ResponsePost(String name, String uid, String message, String tag, String topicPost) {
+        this.description = message;
+        this.name = name;
+        this.tag = tag;
+        this.uid = uid;
+        this.topicPost = topicPost;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
-    public int getPostID(){
-        return postID;
+    public String getName() {
+        return name;
     }
-    public String getMessage() {
-        return message;
+
+    public String getTag() {
+        return tag;
     }
-    public String getAuthor() {
-        return author;
-    }
-    public int getTopicID(){
-        return topicID;
+
+    public String getUid() {
+        return uid;
     }
 }

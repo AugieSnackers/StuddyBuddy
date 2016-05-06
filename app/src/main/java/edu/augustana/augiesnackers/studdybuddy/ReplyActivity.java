@@ -22,7 +22,7 @@ import com.firebase.ui.FirebaseRecyclerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class ReplyActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     private Firebase firebase;
     private EditText sendText;
@@ -35,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_reply);
 
-        sendText = (EditText) findViewById(R.id.etStatus);
+        sendText = (EditText) findViewById(R.id.replyStatus);
 
         try {
             mBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), LogInActivity.personPhoto);
@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
         sendbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Status status = new Status(LogInActivity.personName, LogInActivity.personId, sendText.getText().toString(), "#testing");
-                firebase.push().setValue(status, new Firebase.CompletionListener() {
+                ResponsePost reply = new ResponsePost(LogInActivity.personName, LogInActivity.personId, sendText.getText().toString(), "#testing", "TOPIC MUST BE PASSED HERE");
+                firebase.push().setValue(reply, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                         if (firebaseError != null) {
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
-        firebase = new Firebase("https://studdy-buddy.firebaseio.com/Status");
+        firebase = new Firebase("https://studdy-buddy.firebaseio.com/Reply");
         mStatusRef = firebase.limitToLast(10);
 
 
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             public void populateViewHolder(View_Holder holder, Status status, int position) {
                 holder.setName(status.getName());
                 holder.setDescription(status.getDescription());
-               // holder.setImage(mBitmap);
+                // holder.setImage(mBitmap);
             }
         };
 

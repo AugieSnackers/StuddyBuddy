@@ -1,8 +1,6 @@
 package edu.augustana.augiesnackers.studdybuddy;
 
 /**
- * @author greg
- * @since 6/21/13
  * Adapted by Scott Doberstein
  */
 public class TopicPost {
