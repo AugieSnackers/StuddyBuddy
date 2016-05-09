@@ -30,7 +30,7 @@ public class ReplyActivity extends AppCompatActivity {
     private Query mStatusRef;
     static Bitmap mBitmap ;
 
-    FirebaseRecyclerAdapter<Status, View_Holder> firebaseAdapter;
+    FirebaseRecyclerAdapter<ResponsePost, View_Holder> firebaseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,18 +70,18 @@ public class ReplyActivity extends AppCompatActivity {
         mStatusRef = firebase.limitToLast(10);
 
 
-        firebaseAdapter = new FirebaseRecyclerAdapter<Status, View_Holder>(Status.class, R.layout.card_view, View_Holder.class, mStatusRef) {
+        firebaseAdapter = new FirebaseRecyclerAdapter<ResponsePost, View_Holder>(ResponsePost.class, R.layout.card_view, View_Holder.class, mStatusRef) { //CHANGE CARD_VIEW TO REPLY_VIEW
             @Override
             public View_Holder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view, parent, false);
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view, parent, false);//CHANGE CARD_VIEW TO REPLY_VIEW
                 View_Holder holder = new View_Holder(v);
                 return holder;
             }
             @Override
-            public void populateViewHolder(View_Holder holder, Status status, int position) {
-                holder.setName(status.getName());
-                holder.setDescription(status.getDescription());
+            public void populateViewHolder(View_Holder holder, ResponsePost reply, int position) {
+                holder.setName(reply.getName());
+                holder.setDescription(reply.getDescription());
                 // holder.setImage(mBitmap);
             }
         };
