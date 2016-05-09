@@ -49,7 +49,7 @@ public class ReplyActivity extends AppCompatActivity {
         sendbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ResponsePost reply = new ResponsePost(LogInActivity.personName, LogInActivity.personId, sendText.getText().toString(), "#testing", "TOPIC MUST BE PASSED HERE");
+                ResponsePost reply = new ResponsePost(LogInActivity.personName, LogInActivity.personId, sendText.getText().toString(), 5); //last int must be changed to topic post ID number
                 firebase.push().setValue(reply, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -70,11 +70,11 @@ public class ReplyActivity extends AppCompatActivity {
         mStatusRef = firebase.limitToLast(10);
 
 
-        firebaseAdapter = new FirebaseRecyclerAdapter<ResponsePost, View_Holder>(ResponsePost.class, R.layout.card_view, View_Holder.class, mStatusRef) { //CHANGE CARD_VIEW TO REPLY_VIEW
+        firebaseAdapter = new FirebaseRecyclerAdapter<ResponsePost, View_Holder>(ResponsePost.class, R.layout.second_card_view, View_Holder.class, mStatusRef) {
             @Override
             public View_Holder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view, parent, false);//CHANGE CARD_VIEW TO REPLY_VIEW
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.second_card_view, parent, false);
                 View_Holder holder = new View_Holder(v);
                 return holder;
             }

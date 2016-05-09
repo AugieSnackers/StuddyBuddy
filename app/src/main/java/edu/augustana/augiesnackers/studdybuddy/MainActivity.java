@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         sendbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(),ReplyActivity.class);
+//                startActivity(intent);
                 Status status = new Status(LogInActivity.personName, LogInActivity.personId, sendText.getText().toString(), "#testing");
                 firebase.push().setValue(status, new Firebase.CompletionListener() {
                     @Override
@@ -88,6 +91,17 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(firebaseAdapter);
         //TODO Firebase Stuff https://www.firebase.com/docs/android/guide/
+//        Button replybtn = (Button)findViewById(R.id.reply_btn);
+//        replybtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(),ReplyActivity.class);
+//
+//                startActivity(intent);
+//
+//
+//            }
+//        });
     }
 
     @Override

@@ -6,9 +6,8 @@ package edu.augustana.augiesnackers.studdybuddy;
 public class ResponsePost {
     String description;
     String name;
-    String tag;
     String uid;
-    String topicPost; //make this a Status object pass in?
+    int topicPostID; //make this a Status object pass in?
     int postID;
 
     //private TopicPost postTopic;
@@ -18,12 +17,11 @@ public class ResponsePost {
     public ResponsePost() {
     }
 
-    ResponsePost(String name, String uid, String message, String tag, String topicPost) { //add postID pass in later?
+    ResponsePost(String name, String uid, String message, int topicPostID) { //add postID pass in later?
         this.description = message;
         this.name = name;
-        this.tag = tag;
         this.uid = uid;
-        this.topicPost = topicPost;
+        this.topicPostID = topicPostID;
         this.postID = postID;
     }
 
@@ -33,12 +31,12 @@ public class ResponsePost {
     public String getName() {
         return name;
     }
-    public String getTag() {
-        return tag;
-    }
     public String getUid() {
         return uid;
     }
     public int getPostID(){ return postID; }
+    public int topicPostID(){
+        return topicPostID;
+    }
 
 }
