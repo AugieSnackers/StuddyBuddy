@@ -67,7 +67,8 @@
                 android:layout_margin="8dp"
                 android:src="@android:drawable/ic_menu_send"
                 android:layout_height="wrap_content"
-                tools:ignore="contentDescription" />
+                tools:ignore="contentDescription"
+                android:layout_gravity="center_vertical" />
         </LinearLayout>
 
         <include
