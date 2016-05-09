@@ -21,10 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="68dp"
-            android:text="KLWERGJO;RFIG
-            0-ERIOYH]-ERT90YHIYRT=-O9-Y0
-            RT=YIOHKYE'-R[0YI=-TOP
-            56=YPO56I5GH0I50[HYI56[0"
+            android:text="Topic (Status) post goes here"
             android:id="@+id/textView2"
             android:layout_weight="0.80" />
     </LinearLayout>

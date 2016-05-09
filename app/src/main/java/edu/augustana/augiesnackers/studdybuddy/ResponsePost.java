@@ -7,7 +7,7 @@ public class ResponsePost {
     String description;
     String name;
     String uid;
-    int topicPostID; //make this a Status object pass in?
+    String statusPostID; //make this a Status object pass in?
     int postID;
 
     //private TopicPost postTopic;
@@ -17,12 +17,12 @@ public class ResponsePost {
     public ResponsePost() {
     }
 
-    ResponsePost(String name, String uid, String message, int topicPostID) { //add postID pass in later?
+    public ResponsePost(String name, String uid, String message, String statusPostID) { //add postID pass in later?
         this.description = message;
         this.name = name;
         this.uid = uid;
-        this.topicPostID = topicPostID;
-        this.postID = postID;
+        this.statusPostID = statusPostID;
+      //  this.postID = postID;
     }
 
     public String getDescription() {
@@ -35,8 +35,8 @@ public class ResponsePost {
         return uid;
     }
     public int getPostID(){ return postID; }
-    public int topicPostID(){
-        return topicPostID;
+    public String statusPostID(){
+        return statusPostID;
     }
 
 }

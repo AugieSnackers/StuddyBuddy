@@ -49,7 +49,7 @@ public class ReplyActivity extends AppCompatActivity {
         sendbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ResponsePost reply = new ResponsePost(LogInActivity.personName, LogInActivity.personId, sendText.getText().toString(), 5); //last int must be changed to topic post ID number
+                ResponsePost reply = new ResponsePost(LogInActivity.personName, LogInActivity.personId, sendText.getText().toString(), "Status Post ID"); //last int must be changed to topic post ID number
                 firebase.push().setValue(reply, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
