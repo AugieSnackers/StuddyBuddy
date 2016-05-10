@@ -21,6 +21,7 @@ public class Status {
         //this.postID = postID;
 
     }
+
     public String getDescription(){
         return description;   }
     public String getName(){
@@ -33,5 +34,6 @@ public class Status {
     public int getPostID(){
         return postID;
     }
+
 
 }

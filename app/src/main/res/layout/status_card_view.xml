@@ -62,7 +62,7 @@ android:orientation="vertical">
 
         <Button
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="100dp"
+            android:layout_width="110dp"
             android:layout_height="50dp"
             android:text="Attend"
             android:id="@+id/attend_btn"

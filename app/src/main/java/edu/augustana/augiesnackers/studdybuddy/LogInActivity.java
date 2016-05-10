@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -26,15 +25,13 @@ import com.google.android.gms.common.api.Status;
 
 //https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/SignInActivity.java#L51-L55
 public class LogInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
-//    static final String USER_NAME ="NAME";
-//    static final String USER_PHOTO ="PHOTO";
-//    static final String USER_ID ="ID";
+    static final String USER_NAME ="NAME";
+    static final String USER_ID ="ID";
     private static final int RC_SIGN_IN = 9001;
     private TextView mStatusTextView;
-    static   String personName;
-    static String personEmail;
-    static String personId;
-    static Uri personPhoto;
+    private   String personName;
+    private String personEmail;
+    private String personId;
     private GoogleApiClient mGoogleApiClient;
     private ProgressDialog mProgressDialog;
     private Typeface myTypeface;
@@ -105,8 +102,14 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), StatusActivity.class);
+
+                Bundle extras = new Bundle();
+                extras.putString(USER_NAME,personName);
+                extras.putString(USER_ID,personId);
+                intent.putExtras(extras);
                 startActivity(intent);
+
 
             }
         });
@@ -184,7 +187,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             personName = acct.getDisplayName();
             personEmail = acct.getEmail();
             personId = acct.getId();
-            personPhoto = acct.getPhotoUrl();
             handleSignInResult(result);
         }
     }

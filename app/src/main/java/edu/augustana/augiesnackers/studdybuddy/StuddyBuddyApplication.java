@@ -5,7 +5,7 @@ import com.firebase.client.Firebase;
 /**
  * Created by Nelly on 4/27/2016.
  */
-public class SetFirebase extends android.app.Application {
+public class StuddyBuddyApplication extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
