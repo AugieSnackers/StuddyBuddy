@@ -1,9 +1,6 @@
 package edu.augustana.augiesnackers.studdybuddy;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,80 +16,70 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ReplyActivity extends AppCompatActivity {
-    RecyclerView recyclerView;
-    private Firebase firebase;
-    private EditText sendText;
-    private ImageView sendbtn;
-    private Query mStatusRef;
-    static Bitmap mBitmap ;
+    private Firebase mRef;
+    private Query mReplyRef;
+    private ImageView mSendButton;
+    private EditText mReplyEdit;
 
-    FirebaseRecyclerAdapter<ResponsePost, View_Holder> firebaseAdapter;
+    private RecyclerView mReplies;
+    private FirebaseRecyclerAdapter<Replies,ReplyViewHolder> mRecycleViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reply);
 
-        sendText = (EditText) findViewById(R.id.replyStatus);
+        mSendButton = (ImageView) findViewById(R.id.ivSend);
+        mReplyEdit = (EditText) findViewById(R.id.etStatus);
 
-        try {
-            mBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), LogInActivity.personPhoto);
-        }catch (Exception e){
 
-        }
+        mRef = new Firebase("https://studdy-buddy.firebaseio.com/Reply");
+        mReplyRef = mRef.limitToLast(50);
 
-        sendbtn = (ImageView) findViewById(R.id.ivSend);
-        sendbtn.setOnClickListener(new View.OnClickListener() {
+        mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ResponsePost reply = new ResponsePost(LogInActivity.personName, LogInActivity.personId, sendText.getText().toString(), "Status Post ID"); //last int must be changed to topic post ID number
-                firebase.push().setValue(reply, new Firebase.CompletionListener() {
+                Replies reply = new Replies("", "", mReplyEdit.getText().toString(), "Status Post ID"); //last int must be changed to topic post ID number
+                mRef.push().setValue(reply, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                         if (firebaseError != null) {
-                            Log.e("Error", firebaseError.toString());
+                            Log.e("FIREBASE", firebaseError.toString());
                         }
                     }
                 });
-                sendText.setText("");
+                mReplyEdit.setText("");
             }
         });
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mReplies = (RecyclerView) findViewById(R.id.messagesList);
 
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setReverseLayout(false);
 
-        firebase = new Firebase("https://studdy-buddy.firebaseio.com/Reply");
-        mStatusRef = firebase.limitToLast(10);
+        mReplies.setHasFixedSize(false);
+        mReplies.setLayoutManager(manager);
 
+        mRecycleViewAdapter = new FirebaseRecyclerAdapter<Replies,ReplyViewHolder>(Replies.class, R.layout.replies_card_view, ReplyViewHolder.class, mReplyRef) {
+            public ReplyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        firebaseAdapter = new FirebaseRecyclerAdapter<ResponsePost, View_Holder>(ResponsePost.class, R.layout.second_card_view, View_Holder.class, mStatusRef) {
-            @Override
-            public View_Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.second_card_view, parent, false);
-                View_Holder holder = new View_Holder(v);
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.replies_card_view, parent, false);
+                ReplyViewHolder holder = new ReplyViewHolder(v);
                 return holder;
             }
+
             @Override
-            public void populateViewHolder(View_Holder holder, ResponsePost reply, int position) {
+            public void populateViewHolder(ReplyViewHolder holder, Replies reply, int position) {
                 holder.setName(reply.getName());
-                holder.setDescription(reply.getDescription());
-                // holder.setImage(mBitmap);
+                holder.setStatus(reply.getStatus());
+                holder.setIsSender(false);
             }
         };
 
-        recyclerView.setAdapter(firebaseAdapter);
-        //TODO Firebase Stuff https://www.firebase.com/docs/android/guide/
+        mReplies.setAdapter(mRecycleViewAdapter);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        firebaseAdapter.cleanup();
-    }
 }
+
+//}

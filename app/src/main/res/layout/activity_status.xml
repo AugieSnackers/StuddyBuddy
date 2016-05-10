@@ -8,9 +8,9 @@
     android:background="@color/blue_grey_700"
     android:orientation="vertical"
     android:weightSum="4"
-    tools:context="edu.augustana.augiesnackers.studdybuddy.MainActivity">
+    tools:context=".StatusActivity">
     <include
-        layout="@layout/content_main"
+        layout="@layout/content_status"
         android:layout_height="match_parent"
         android:layout_width="wrap_content"
         android:layout_below="@+id/statusBar" />
@@ -38,11 +38,14 @@
             android:gravity ="top|left"
             android:scrollbars="vertical" />
 
+
         <ImageView
             android:id="@+id/ivSend"
             android:padding="2dp"
             android:layout_width="wrap_content"
             android:layout_margin="8dp"
+            android:layout_gravity="bottom"
+            android:layout_below="@+id/classTag"
             android:src="@android:drawable/ic_menu_send"
             android:layout_height="wrap_content"
             tools:ignore="contentDescription" />

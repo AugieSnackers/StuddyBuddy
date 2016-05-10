@@ -3,8 +3,8 @@ package edu.augustana.augiesnackers.studdybuddy;
 /**
  * Adapted by Scott Doberstein
  */
-public class ResponsePost {
-    String description;
+public class Replies {
+    String status;
     String name;
     String uid;
     String statusPostID; //make this a Status object pass in?
@@ -14,19 +14,19 @@ public class ResponsePost {
 
     // Required default constructor for Firebase object mapping
    @SuppressWarnings("unused")
-    public ResponsePost() {
+    public Replies() {
     }
 
-    public ResponsePost(String name, String uid, String message, String statusPostID) { //add postID pass in later?
-        this.description = message;
+    public Replies(String name, String uid, String message, String statusPostID) { //add postID pass in later?
+        this.status = message;
         this.name = name;
         this.uid = uid;
         this.statusPostID = statusPostID;
       //  this.postID = postID;
     }
 
-    public String getDescription() {
-        return description;
+    public String getStatus() {
+        return status;
     }
     public String getName() {
         return name;
