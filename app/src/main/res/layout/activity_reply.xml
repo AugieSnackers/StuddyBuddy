@@ -47,11 +47,22 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="100dp"
             android:layout_height="50dp"
-            android:text="DELETE"
-            android:id="@+id/reply_btn"
+            android:text="edit"
+            android:id="@+id/edit_btn"
             android:theme="@style/ThemeOverlay.MyDarkButton"
             android:layout_below="@+id/description"
             android:layout_centerHorizontal="true"
+            android:textColor="#000000" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="110dp"
+            android:layout_height="50dp"
+            android:text="delete"
+            android:id="@+id/delete_btn"
+            android:theme="@style/ThemeOverlay.MyDarkButton"
+            android:layout_alignTop="@+id/edit_btn"
+            android:layout_alignParentEnd="true"
             android:textColor="#000000" />
 
 
@@ -79,7 +90,7 @@
         <EditText
             android:layout_margin="8dp"
             android:id="@+id/etStatus"
-            android:hint="Studdying?"
+            android:hint="Reply..."
             android:textColor="@android:color/primary_text_dark"
             android:lines="2"
             android:background="@drawable/rect_values"

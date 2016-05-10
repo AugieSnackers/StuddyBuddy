@@ -1,11 +1,12 @@
 package edu.augustana.augiesnackers.studdybuddy;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,17 +51,8 @@ public class StatusActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Status status = new Status(userName, userID, sendText.getText().toString(), "#testing");
+                showAlert();
 
-                firebase.push().setValue(status, new Firebase.CompletionListener() {
-                    @Override
-                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                        if (firebaseError != null) {
-                            Log.e("Error", firebaseError.toString());
-                        }
-                    }
-                });
-                sendText.setText("");
             }
         });
 
@@ -81,7 +73,7 @@ public class StatusActivity extends AppCompatActivity {
             @Override
             public void populateViewHolder(StatusesViewHolder holder, Status status, int position) {
                 holder.setName(status.getName());
-                holder.setDescription(status.getDescription());
+                holder.setDescription(status.getDescription(),status.getTag());
                 holder.setImage(R.drawable.ic_facebook);
             }
         };
@@ -124,6 +116,58 @@ public void openReplies(String text){
     Intent intent = new Intent(getApplicationContext(), ReplyActivity.class);
     startActivity(intent);
 }
+public void showAlert(){
+    LayoutInflater li = LayoutInflater.from(this);
+    View promptsView = li.inflate(R.layout.dialog_class_prompt, null);
+    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+    alertDialogBuilder.setView(promptsView);
+
+    final EditText userInput = (EditText)promptsView.findViewById(R.id.dialog_class_promt_et);
+
+
+    // set dialog message
+    alertDialogBuilder
+            .setCancelable(false)
+            .setPositiveButton("DONE",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            if (isEntered(userInput)) {
+                                String tag = "#" + userInput.getText();
+                                Status status = new Status(userName, userID, sendText.getText().toString(), tag);
+
+                                firebase.push().setValue(status, new Firebase.CompletionListener() {
+                                    @Override
+                                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                        if (firebaseError != null) {
+                                            Log.e("Error", firebaseError.toString());
+                                        }
+                                    }
+                                });
+                                sendText.setText("");
+                                dialog.dismiss();
+                            }
+                            // get user input and set it to result
+                            // edit text
+
+                        }
+                    });
+
+
+    // create alert dialog
+    AlertDialog alertDialog = alertDialogBuilder.create();
+
+    // show it
+    alertDialog.show();
 
 }
+    public boolean isEntered(EditText passwordText){
+        if(passwordText.getText().toString().trim().length() > 0) {
+            return true;
+        }
+        return false;
+
+    }
+}
+
 

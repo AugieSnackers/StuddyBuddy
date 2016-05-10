@@ -54,8 +54,8 @@ public class StatusesViewHolder extends RecyclerView.ViewHolder {
         name.setText(user);
     }
 
-    public void setDescription(String text) {
-        description.setText(text);
+    public void setDescription(String desc, String tag) {
+        description.setText(desc+" "+tag);
     }
 
     public void setImage(int id) {
