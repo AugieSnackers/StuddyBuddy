@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -28,9 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText sendText;
     private ImageView sendbtn;
     private Query mStatusRef;
-    private String userName;
-    private String userID;
-
+    static Bitmap mBitmap ;
 
     FirebaseRecyclerAdapter<Status, View_Holder> firebaseAdapter;
 
@@ -40,15 +39,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         sendText = (EditText) findViewById(R.id.etStatus);
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        userName = extras.getString(LogInActivity.USER_NAME);
-        userID = extras.getString(LogInActivity.USER_ID);
+
+        try {
+            mBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), LogInActivity.personPhoto);
+        }catch (Exception e){
+
+        }
+
         sendbtn = (ImageView) findViewById(R.id.ivSend);
         sendbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Status status = new Status(userName, userID, sendText.getText().toString(), "#testing");
+//                Intent intent = new Intent(getApplicationContext(),ReplyActivity.class);
+//                startActivity(intent);
+                Status status = new Status(LogInActivity.personName, LogInActivity.personId, sendText.getText().toString(), "#testing");
                 firebase.push().setValue(status, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -62,11 +66,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
         firebase = new Firebase("https://studdy-buddy.firebaseio.com/Status");
-        mStatusRef = firebase.orderByChild("timestamp").limitToLast(10);
+        mStatusRef = firebase.limitToLast(10);
+
+
         firebaseAdapter = new FirebaseRecyclerAdapter<Status, View_Holder>(Status.class, R.layout.card_view, View_Holder.class, mStatusRef) {
             @Override
             public View_Holder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -79,13 +85,23 @@ public class MainActivity extends AppCompatActivity {
             public void populateViewHolder(View_Holder holder, Status status, int position) {
                 holder.setName(status.getName());
                 holder.setDescription(status.getDescription());
-                holder.setImage(R.drawable.ic_facebook);
+               // holder.setImage(mBitmap);
             }
         };
+
         recyclerView.setAdapter(firebaseAdapter);
-
         //TODO Firebase Stuff https://www.firebase.com/docs/android/guide/
-
+//        Button replybtn = (Button)findViewById(R.id.reply_btn);
+//        replybtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(),ReplyActivity.class);
+//
+//                startActivity(intent);
+//
+//
+//            }
+//        });
     }
 
     @Override
@@ -93,6 +109,4 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         firebaseAdapter.cleanup();
     }
-
-
 }

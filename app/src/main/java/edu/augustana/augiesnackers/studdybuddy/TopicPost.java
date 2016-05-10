@@ -2,6 +2,7 @@ package edu.augustana.augiesnackers.studdybuddy;
 
 /**
  * Adapted by Scott Doberstein
+ * Class not necessary, replaced by Status
  */
 public class TopicPost {
     private int postID;

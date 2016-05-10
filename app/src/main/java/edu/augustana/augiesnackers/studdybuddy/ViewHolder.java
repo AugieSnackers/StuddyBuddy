@@ -11,7 +11,7 @@ import android.widget.TextView;
 /**
  * Created by Nelly on 4/29/2016.
  */
-public class View_Holder extends RecyclerView.ViewHolder {
+public class ViewHolder extends RecyclerView.ViewHolder {
 
     private CardView cv;
     TextView name;
@@ -20,7 +20,7 @@ public class View_Holder extends RecyclerView.ViewHolder {
     private Button attending_btn;
     private Button reply_btn;
 
-    View_Holder(View itemView) {
+    ViewHolder(View itemView) {
         super(itemView);
         cv = (CardView) itemView.findViewById(R.id.cardView);
         name = (TextView) itemView.findViewById(R.id.title);
