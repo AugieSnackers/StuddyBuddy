@@ -16,19 +16,23 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 
 public class StatusActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     private Firebase firebase;
+    private Firebase ref;
     private EditText sendText;
     private ImageView sendbtn;
     private Query mStatusRef;
     private String userName;
     private String userID;
+
 
 
     FirebaseRecyclerAdapter<Status, StatusesViewHolder> firebaseAdapter;
@@ -133,8 +137,10 @@ public void showAlert(){
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             if (isEntered(userInput)) {
+
+                                Long tempID = getStatusID();
                                 String tag = "#" + userInput.getText();
-                                Status status = new Status(userName, userID, sendText.getText().toString(), tag);
+                                Status status = new Status(userName, userID, sendText.getText().toString(), tag, tempID);
 
                                 firebase.push().setValue(status, new Firebase.CompletionListener() {
                                     @Override
@@ -166,8 +172,39 @@ public void showAlert(){
             return true;
         }
         return false;
+    }
+
+
+
+    public Long getStatusID(){
+        Long postID = new Long(0);
+        ref = new Firebase("https://studdy-buddy.firebaseio.com/PostID");
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Long temp = snapshot.getValue(Long.class);
+                temp = Long.valueOf(temp);
+
+                Log.d("Temp Value", temp.toString());
+                System.out.println(temp);
+                ref.setValue((Long) snapshot.getValue() + 1);
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
+
+        return postID;
+
 
     }
+
+
+
 }
 
 

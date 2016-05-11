@@ -8,17 +8,17 @@ public class Status {
     String name;
     String tag;
     String uid;
-    int postID;
+    Long postID;
     @SuppressWarnings("unused")
     public Status(){
 
     }
-    public  Status(String name,String uid,String message, String tag){ //add post id pass in later
+    public  Status(String name,String uid,String message, String tag, Long postID){ //add post id pass in later
         this.description = message;
         this.name = name;
         this.tag =tag;
         this.uid = uid;
-        //this.postID = postID;
+        this.postID = postID;
 
     }
 
@@ -31,7 +31,7 @@ public class Status {
     public String getUid(){
         return uid;
     }
-    public int getPostID(){
+    public Long getPostID(){
         return postID;
     }
 
