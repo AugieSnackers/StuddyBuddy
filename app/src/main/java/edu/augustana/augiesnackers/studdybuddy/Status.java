@@ -1,9 +1,18 @@
 package edu.augustana.augiesnackers.studdybuddy;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.MutableData;
+import com.firebase.client.Transaction;
+
 /**
  * Created by Nelly on 4/28/2016.
  */
 public class Status {
+
+    public static long postCount = 0;
+
     String description;
     String name;
     String tag;
@@ -34,6 +43,7 @@ public class Status {
     public Long getPostID(){
         return postID;
     }
+
 
 
 }

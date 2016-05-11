@@ -19,14 +19,15 @@ import android.widget.ImageView;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.MutableData;
 import com.firebase.client.Query;
+import com.firebase.client.Transaction;
 import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 
 public class StatusActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     private Firebase firebase;
-    private Firebase ref;
     private EditText sendText;
     private ImageView sendbtn;
     private Query mStatusRef;
@@ -138,18 +139,9 @@ public void showAlert(){
                         public void onClick(DialogInterface dialog, int id) {
                             if (isEntered(userInput)) {
 
-                                Long tempID = getStatusID();
                                 String tag = "#" + userInput.getText();
-                                Status status = new Status(userName, userID, sendText.getText().toString(), tag, tempID);
+                                incrementAndPost(tag);
 
-                                firebase.push().setValue(status, new Firebase.CompletionListener() {
-                                    @Override
-                                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                                        if (firebaseError != null) {
-                                            Log.e("Error", firebaseError.toString());
-                                        }
-                                    }
-                                });
                                 sendText.setText("");
                                 dialog.dismiss();
                             }
@@ -175,31 +167,36 @@ public void showAlert(){
     }
 
 
+    public void incrementAndPost(final String tag){
+        Firebase ref = new Firebase("https://studdy-buddy.firebaseio.com/PostID");
 
-    public Long getStatusID(){
-        Long postID = new Long(0);
-        ref = new Firebase("https://studdy-buddy.firebaseio.com/PostID");
-
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.runTransaction(new Transaction.Handler() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Long temp = snapshot.getValue(Long.class);
-                temp = Long.valueOf(temp);
-
-                Log.d("Temp Value", temp.toString());
-                System.out.println(temp);
-                ref.setValue((Long) snapshot.getValue() + 1);
-
+            public Transaction.Result doTransaction(MutableData currentData) {
+                if(currentData.getValue() == null) {
+                    currentData.setValue(1);
+                } else {
+                    currentData.setValue((Long) currentData.getValue() + 1);
+                    Status.postCount = (Long) currentData.getValue();
+                }
+                return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
             }
-
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
+            public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
+
+                Status status = new Status(userName, userID, sendText.getText().toString(), tag, Status.postCount);
+
+                firebase.push().setValue(status, new Firebase.CompletionListener() {
+                    @Override
+                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                        if (firebaseError != null) {
+                            Log.e("Error", firebaseError.toString());
+                        }
+                    }
+                });
+
             }
         });
-
-        return postID;
-
 
     }
 
