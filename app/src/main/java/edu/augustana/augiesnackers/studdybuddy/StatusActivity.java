@@ -54,8 +54,8 @@ public class StatusActivity extends AppCompatActivity implements SearchView.OnQu
         sendText = (EditText) findViewById(R.id.etStatus);
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        userName = "Nelly Cheboi";//extras.getString(LogInActivity.USER_NAME);
-        userID = "89";//extras.getString(LogInActivity.USER_ID);
+        userName = LogInActivity.USER_NAME;
+        userID = LogInActivity.USER_ID;
         sendbtn = (ImageView) findViewById(R.id.ivSend);
         sendbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +70,8 @@ public class StatusActivity extends AppCompatActivity implements SearchView.OnQu
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         firebase = new Firebase("https://studdy-buddy.firebaseio.com/Status");
-        mStatusRef = firebase.orderByChild("timestamp").limitToLast(50);
+        //mStatusRef = firebase.orderByChild("timestamp").limitToLast(50);
+        mStatusRef= firebase.limitToLast(10);
         firebaseAdapter = new FirebaseRecyclerAdapter<Status, StatusesViewHolder>(Status.class, R.layout.status_card_view, StatusesViewHolder.class, mStatusRef) {
             @Override
             public StatusesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -82,11 +83,12 @@ public class StatusActivity extends AppCompatActivity implements SearchView.OnQu
 
             @Override
             public void populateViewHolder(StatusesViewHolder holder, Status status, int position) {
-                holder.setPostID(status.getPostID());
+               holder.setPostID(status.getPostID());
                 holder.setName(status.getName());
                 holder.setDescription(status.getDescription(),status.getTag());
                 holder.setImage(R.drawable.ic_facebook);
                 holder.setReplyButton(status.getNumReplies());
+
             }
         };
         recyclerView.setAdapter(firebaseAdapter);
@@ -144,7 +146,6 @@ public void openReplies(Long postID, String description){
     Intent intent = new Intent(getApplicationContext(), ReplyActivity.class);
     intent.putExtra(POST_ID, postID);
     intent.putExtra(STATUS_POST_DESCRIPTION, description);
-    Log.d("PostID StatusActivity", ""+ postID);
             startActivity(intent);
 }
 public void showAlert(){
@@ -210,7 +211,7 @@ public void showAlert(){
             @Override
             public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
 
-                Status status = new Status(userName, userID, description, tag, Status.postCount, 0l ,0l);
+                Status status = new Status(userName, userID, description, tag, Status.postCount, 3L ,0L);
                 firebase.push().setValue(status, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {

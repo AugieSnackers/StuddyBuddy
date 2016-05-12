@@ -19,7 +19,7 @@ public class Status {
     String uid;
     Long postID;
     Long numReplies;
-    Long attendees;
+    Long numAttendees;
     @SuppressWarnings("unused")
     public Status(){
 
@@ -31,7 +31,7 @@ public class Status {
         this.uid = uid;
         this.postID = postID;
         this.numReplies = numReplies;
-        this.attendees = numAttendees;
+        this.numAttendees = numAttendees;
 
     }
 
@@ -51,7 +51,7 @@ public class Status {
         return numReplies;
     }
     public Long getNumAttendees(){
-        return attendees;
+        return numAttendees;
     }
 
 }
