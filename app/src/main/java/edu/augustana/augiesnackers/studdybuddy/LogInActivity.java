@@ -26,13 +26,11 @@ import com.google.android.gms.common.api.Status;
 
 //https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/SignInActivity.java#L51-L55
 public class LogInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
-    static final String USER_NAME ="NAME";
-    static final String USER_ID ="ID";
     private static final int RC_SIGN_IN = 9001;
     private TextView mStatusTextView;
-    private static String personName;
-    private static String personEmail;
-    private static String personId;
+    public static String personName;
+   public static String personEmail;
+    public static String personId;
     private GoogleApiClient mGoogleApiClient;
     private ProgressDialog mProgressDialog;
     private Typeface myTypeface;
@@ -184,9 +182,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             GoogleSignInAccount acct = result.getSignInAccount();
-            personName = acct.getDisplayName();
-            personEmail = acct.getEmail();
-            personId = acct.getId();
             handleSignInResult(result);
         }
     }
@@ -199,7 +194,9 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
-
+            personName = acct.getDisplayName();
+            personEmail = acct.getEmail();
+            personId = acct.getId();
             updateUI(true);
 
 

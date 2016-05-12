@@ -54,8 +54,8 @@ public class StatusActivity extends AppCompatActivity implements SearchView.OnQu
         sendText = (EditText) findViewById(R.id.etStatus);
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        userName = LogInActivity.USER_NAME;
-        userID = LogInActivity.USER_ID;
+        userName = LogInActivity.personName;
+        userID = LogInActivity.personId;
         sendbtn = (ImageView) findViewById(R.id.ivSend);
         sendbtn.setOnClickListener(new View.OnClickListener() {
             @Override

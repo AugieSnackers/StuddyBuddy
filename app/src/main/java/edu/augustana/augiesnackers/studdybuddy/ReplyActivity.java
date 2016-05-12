@@ -54,7 +54,7 @@ public class ReplyActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //@param (String Name, string userID, String Text, Long postID)
-                Replies reply = new Replies(LogInActivity.USER_NAME, LogInActivity.USER_ID, mReplyEdit.getText().toString(), postID); //last int must be changed to topic post ID number
+                Replies reply = new Replies(LogInActivity.personName, LogInActivity.personId, mReplyEdit.getText().toString(), postID); //last int must be changed to topic post ID number
                 mReplyRef.push().setValue(reply, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
