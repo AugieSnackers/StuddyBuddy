@@ -7,7 +7,7 @@
     <application
         android:name=".StuddyBuddyApplication"
         android:allowBackup="true"
-        android:icon="@drawable/studdy_buddy"
+        android:icon="@drawable/studdy_buddy_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
