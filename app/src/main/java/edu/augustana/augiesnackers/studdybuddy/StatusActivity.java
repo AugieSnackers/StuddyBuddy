@@ -191,6 +191,7 @@ public void showAlert(){
     }
 
 public void incrementAttendees(Long postID, final StatusesViewHolder holder) {
+    //TODO NOT WORKING
     Query mStatusRefQuery = statusRef.orderByChild("postID").equalTo(postID).limitToFirst(1);
     Firebase ref = mStatusRefQuery.getRef();
     ref.runTransaction(new Transaction.Handler() {
