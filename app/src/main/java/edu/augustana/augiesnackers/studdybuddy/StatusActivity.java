@@ -33,6 +33,9 @@ public class StatusActivity extends AppCompatActivity {
     private Query mStatusRef;
     private String userName;
     private String userID;
+    final static String POST_ID ="postid";
+    final static String STATUS_POST_DESCRIPTION ="status";
+
 
 
 
@@ -77,9 +80,11 @@ public class StatusActivity extends AppCompatActivity {
 
             @Override
             public void populateViewHolder(StatusesViewHolder holder, Status status, int position) {
+                holder.setPostID(status.getPostID());
                 holder.setName(status.getName());
                 holder.setDescription(status.getDescription(),status.getTag());
                 holder.setImage(R.drawable.ic_facebook);
+                holder.setReplyButton(status.getNumReplies());
             }
         };
         recyclerView.setAdapter(firebaseAdapter);
@@ -117,9 +122,12 @@ public class StatusActivity extends AppCompatActivity {
         firebaseAdapter.cleanup();
     }
 
-public void openReplies(String text){
+public void openReplies(Long postID, String description){
     Intent intent = new Intent(getApplicationContext(), ReplyActivity.class);
-    startActivity(intent);
+    intent.putExtra(POST_ID, postID);
+    intent.putExtra(STATUS_POST_DESCRIPTION, description);
+    Log.d("PostID StatusActivity", ""+ postID);
+            startActivity(intent);
 }
 public void showAlert(){
     LayoutInflater li = LayoutInflater.from(this);
@@ -140,7 +148,7 @@ public void showAlert(){
                             if (isEntered(userInput)) {
 
                                 String tag = "#" + userInput.getText();
-                                incrementAndPost(tag);
+                                incrementAndPost(sendText.getText().toString(), tag);
 
                                 sendText.setText("");
                                 dialog.dismiss();
@@ -167,7 +175,7 @@ public void showAlert(){
     }
 
 
-    public void incrementAndPost(final String tag){
+    public void incrementAndPost(final String description, final String tag){
         Firebase ref = new Firebase("https://studdy-buddy.firebaseio.com/PostID");
 
         ref.runTransaction(new Transaction.Handler() {
@@ -184,8 +192,7 @@ public void showAlert(){
             @Override
             public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
 
-                Status status = new Status(userName, userID, sendText.getText().toString(), tag, Status.postCount);
-
+                Status status = new Status(userName, userID, description, tag, Status.postCount, 0l ,0l);
                 firebase.push().setValue(status, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {

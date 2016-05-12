@@ -7,8 +7,8 @@ public class Replies {
     String status;
     String name;
     String uid;
-    String statusPostID; //make this a Status object pass in?
-    int postID;
+    Long statusPostID;
+
 
     //private TopicPost postTopic;
 
@@ -17,12 +17,12 @@ public class Replies {
     public Replies() {
     }
 
-    public Replies(String name, String uid, String message, String statusPostID) { //add postID pass in later?
+    public Replies(String name, String uid, String message, Long statusPostID) {
         this.status = message;
         this.name = name;
         this.uid = uid;
         this.statusPostID = statusPostID;
-      //  this.postID = postID;
+
     }
 
     public String getStatus() {
@@ -34,8 +34,7 @@ public class Replies {
     public String getUid() {
         return uid;
     }
-    public int getPostID(){ return postID; }
-    public String statusPostID(){
+    public Long getStatusPostID(){
         return statusPostID;
     }
 

@@ -30,9 +30,9 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     static final String USER_ID ="ID";
     private static final int RC_SIGN_IN = 9001;
     private TextView mStatusTextView;
-    private   String personName;
-    private String personEmail;
-    private String personId;
+    private static String personName;
+    private static String personEmail;
+    private static String personId;
     private GoogleApiClient mGoogleApiClient;
     private ProgressDialog mProgressDialog;
     private Typeface myTypeface;
@@ -104,11 +104,10 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), StatusActivity.class);
-
-                Bundle extras = new Bundle();
-                extras.putString(USER_NAME,personName);
-                extras.putString(USER_ID,personId);
-                intent.putExtras(extras);
+//                Bundle extras = new Bundle();
+//                //extras.putString(USER_NAME,personName);
+//                //extras.putString(USER_ID,personId);
+//                intent.putExtras(extras);
                 startActivity(intent);
 
 

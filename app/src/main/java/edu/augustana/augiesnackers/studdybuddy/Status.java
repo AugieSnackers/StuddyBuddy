@@ -18,16 +18,20 @@ public class Status {
     String tag;
     String uid;
     Long postID;
+    Long numReplies;
+    Long attendees;
     @SuppressWarnings("unused")
     public Status(){
 
     }
-    public  Status(String name,String uid,String message, String tag, Long postID){ //add post id pass in later
+    public  Status(String name,String uid,String message, String tag, Long postID, Long numReplies, Long numAttendees){ //add post id pass in later
         this.description = message;
         this.name = name;
         this.tag =tag;
         this.uid = uid;
         this.postID = postID;
+        this.numReplies = numReplies;
+        this.attendees = numAttendees;
 
     }
 
@@ -43,7 +47,11 @@ public class Status {
     public Long getPostID(){
         return postID;
     }
-
-
+    public Long getNumReplies(){
+        return numReplies;
+    }
+    public Long getNumAttendees(){
+        return attendees;
+    }
 
 }

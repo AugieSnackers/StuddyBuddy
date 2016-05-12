@@ -46,5 +46,8 @@ public class ReplyViewHolder extends RecyclerView.ViewHolder{
         TextView field = (TextView) mView.findViewById(R.id.message_text);
         field.setText(text);
     }
+
+
+
 }
 

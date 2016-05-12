@@ -1,5 +1,6 @@
 package edu.augustana.augiesnackers.studdybuddy;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -17,11 +19,15 @@ import com.firebase.client.Query;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 
 public class ReplyActivity extends AppCompatActivity {
-    private Firebase mRef;
-    private Query mReplyRef;
+    private Firebase statusRef;
+    private Firebase mReplyRef;
+    private Query mReplyQuery;
+    private Query mStatusRefQuery;
     private ImageView mSendButton;
     private EditText mReplyEdit;
-
+    private Long postID;
+    private TextView statusTextView;
+    private String statusText;
     private RecyclerView mReplies;
     private FirebaseRecyclerAdapter<Replies,ReplyViewHolder> mRecycleViewAdapter;
 
@@ -33,15 +39,23 @@ public class ReplyActivity extends AppCompatActivity {
         mSendButton = (ImageView) findViewById(R.id.ivSend);
         mReplyEdit = (EditText) findViewById(R.id.etStatus);
 
+        Intent intent = getIntent();
+        postID =intent.getLongExtra(StatusActivity.POST_ID,9);
+        statusText = intent.getStringExtra(StatusActivity.STATUS_POST_DESCRIPTION);
+        statusTextView = (TextView)findViewById(R.id.statusDescription);
+        statusTextView.setText(statusText);
+        statusRef = new Firebase("https://studdy-buddy.firebaseio.com/Status/");
+        mReplyRef = new Firebase("https://studdy-buddy.firebaseio.com/Reply/");
 
-        mRef = new Firebase("https://studdy-buddy.firebaseio.com/Reply");
-        mReplyRef = mRef.limitToLast(50);
+       // mReplyRef = statusRef.limitToLast(50);
 
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Replies reply = new Replies("", "", mReplyEdit.getText().toString(), "Status Post ID"); //last int must be changed to topic post ID number
-                mRef.push().setValue(reply, new Firebase.CompletionListener() {
+
+                //@param (String Name, string userID, String Text, Long postID)
+                Replies reply = new Replies("", "", mReplyEdit.getText().toString(), postID); //last int must be changed to topic post ID number
+                mReplyRef.push().setValue(reply, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                         if (firebaseError != null) {
@@ -61,7 +75,10 @@ public class ReplyActivity extends AppCompatActivity {
         mReplies.setHasFixedSize(false);
         mReplies.setLayoutManager(manager);
 
-        mRecycleViewAdapter = new FirebaseRecyclerAdapter<Replies,ReplyViewHolder>(Replies.class, R.layout.replies_card_view, ReplyViewHolder.class, mReplyRef) {
+        mReplyQuery = mReplyRef.orderByChild("statusPostID").equalTo(postID);
+        mStatusRefQuery = statusRef.orderByChild("postID").equalTo(postID);
+
+        mRecycleViewAdapter = new FirebaseRecyclerAdapter<Replies,ReplyViewHolder>(Replies.class, R.layout.replies_card_view, ReplyViewHolder.class, mReplyQuery) {
             public ReplyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
                 View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.replies_card_view, parent, false);
@@ -71,6 +88,7 @@ public class ReplyActivity extends AppCompatActivity {
 
             @Override
             public void populateViewHolder(ReplyViewHolder holder, Replies reply, int position) {
+
                 holder.setName(reply.getName());
                 holder.setStatus(reply.getStatus());
                 holder.setIsSender(false);
