@@ -24,15 +24,14 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.MutableData;
 import com.firebase.client.Query;
 import com.firebase.client.Transaction;
-import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 
 public class StatusActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
     RecyclerView recyclerView;
-    private Firebase firebase;
+    private Firebase statusRef;
     private EditText sendText;
     private ImageView sendbtn;
-    private Query mStatusRef;
+    private Query mStatusQuery;
     private String userName;
     private String userID;
     final static String POST_ID ="postid";
@@ -69,10 +68,9 @@ public class StatusActivity extends AppCompatActivity implements SearchView.OnQu
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        firebase = new Firebase("https://studdy-buddy.firebaseio.com/Status");
-        //mStatusRef = firebase.orderByChild("timestamp").limitToLast(50);
-        mStatusRef= firebase.limitToLast(10);
-        firebaseAdapter = new FirebaseRecyclerAdapter<Status, StatusesViewHolder>(Status.class, R.layout.status_card_view, StatusesViewHolder.class, mStatusRef) {
+        statusRef = new Firebase("https://studdy-buddy.firebaseio.com/Status");
+        mStatusQuery= statusRef.limitToLast(10);
+        firebaseAdapter = new FirebaseRecyclerAdapter<Status, StatusesViewHolder>(Status.class, R.layout.status_card_view, StatusesViewHolder.class, mStatusQuery) {
             @Override
             public StatusesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -88,12 +86,11 @@ public class StatusActivity extends AppCompatActivity implements SearchView.OnQu
                 holder.setDescription(status.getDescription(),status.getTag());
                 holder.setImage(R.drawable.ic_facebook);
                 holder.setReplyButton(status.getNumReplies());
+                holder.setAttends(status.getNumAttendees());
 
             }
         };
         recyclerView.setAdapter(firebaseAdapter);
-
-        //TODO Firebase Stuff https://www.firebase.com/docs/android/guide/
 
 
     }
@@ -146,7 +143,7 @@ public void openReplies(Long postID, String description){
     Intent intent = new Intent(getApplicationContext(), ReplyActivity.class);
     intent.putExtra(POST_ID, postID);
     intent.putExtra(STATUS_POST_DESCRIPTION, description);
-            startActivity(intent);
+    startActivity(intent);
 }
 public void showAlert(){
     LayoutInflater li = LayoutInflater.from(this);
@@ -193,6 +190,28 @@ public void showAlert(){
         return false;
     }
 
+public void incrementAttendees(Long postID, final StatusesViewHolder holder) {
+    Query mStatusRefQuery = statusRef.orderByChild("postID").equalTo(postID).limitToFirst(1);
+    Firebase ref = mStatusRefQuery.getRef();
+    ref.runTransaction(new Transaction.Handler() {
+        @Override
+        public Transaction.Result doTransaction(MutableData currentData) {
+            if (currentData.getValue() == null) {
+                currentData.setValue(1);
+            } else {
+                currentData.setValue((Long) currentData.getValue() + 1);
+            }
+            return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
+        }
+
+        @Override
+        public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
+//          Long num = currentData.getValue(Long.class);
+//            holder.setAttends(num);
+
+        }
+    });
+}
 
     public void incrementAndPost(final String description, final String tag){
         Firebase ref = new Firebase("https://studdy-buddy.firebaseio.com/PostID");
@@ -211,8 +230,8 @@ public void showAlert(){
             @Override
             public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
 
-                Status status = new Status(userName, userID, description, tag, Status.postCount, 3L ,0L);
-                firebase.push().setValue(status, new Firebase.CompletionListener() {
+                Status status = new Status(userName, userID, description, tag, Status.postCount, 0L,0L);
+                statusRef.push().setValue(status, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                         if (firebaseError != null) {
@@ -227,7 +246,7 @@ public void showAlert(){
     }
 
 
-
 }
+
 
 

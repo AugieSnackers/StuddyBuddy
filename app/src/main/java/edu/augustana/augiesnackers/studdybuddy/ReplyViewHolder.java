@@ -19,7 +19,9 @@ public class ReplyViewHolder extends RecyclerView.ViewHolder{
         mView = itemView;
     }
 
-    public void setIsSender(Boolean isSender) {
+    public void setIsSender(boolean isSender) {
+
+
         FrameLayout left_arrow = (FrameLayout) mView.findViewById(R.id.left_arrow);
         FrameLayout right_arrow = (FrameLayout) mView.findViewById(R.id.right_arrow);
         RelativeLayout messageContainer = (RelativeLayout) mView.findViewById(R.id.message_container);
@@ -46,7 +48,6 @@ public class ReplyViewHolder extends RecyclerView.ViewHolder{
         TextView field = (TextView) mView.findViewById(R.id.message_text);
         field.setText(text);
     }
-
 
 
 }

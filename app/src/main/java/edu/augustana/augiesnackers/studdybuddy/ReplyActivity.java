@@ -9,13 +9,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.MutableData;
 import com.firebase.client.Query;
+import com.firebase.client.Transaction;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 
 public class ReplyActivity extends AppCompatActivity {
@@ -27,8 +31,11 @@ public class ReplyActivity extends AppCompatActivity {
     private EditText mReplyEdit;
     private Long postID;
     private TextView statusTextView;
+    private TextView nameTextView;
     private String statusText;
+    private Button delete_btn;
     private RecyclerView mReplies;
+    boolean isSender=false;
     private FirebaseRecyclerAdapter<Replies,ReplyViewHolder> replyFirebaseAdapter;
 
     @Override
@@ -36,48 +43,30 @@ public class ReplyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reply);
 
-        mSendButton = (ImageView) findViewById(R.id.ivSend);
+
         mReplyEdit = (EditText) findViewById(R.id.etStatus);
 
         Intent intent = getIntent();
-        postID =intent.getLongExtra(StatusActivity.POST_ID,0L);
+        postID =intent.getLongExtra(StatusActivity.POST_ID, 0L);
         statusText = intent.getStringExtra(StatusActivity.STATUS_POST_DESCRIPTION);
+
         statusTextView = (TextView)findViewById(R.id.statusDescription);
         statusTextView.setText(statusText);
+
+        nameTextView = (TextView)findViewById(R.id.userName);
+        nameTextView.setText(LogInActivity.personName);
+
         statusRef = new Firebase("https://studdy-buddy.firebaseio.com/Status");
         mReplyRef = new Firebase("https://studdy-buddy.firebaseio.com/Reply");
-
-       // mReplyRef = statusRef.limitToLast(50);
-
-        mSendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //@param (String Name, string userID, String Text, Long postID)
-                Replies reply = new Replies(LogInActivity.personName, LogInActivity.personId, mReplyEdit.getText().toString(), postID); //last int must be changed to topic post ID number
-                mReplyRef.push().setValue(reply, new Firebase.CompletionListener() {
-                    @Override
-                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                        if (firebaseError != null) {
-                            Log.e("FIREBASE", firebaseError.toString());
-                        }
-                    }
-                });
-                mReplyEdit.setText("");
-            }
-        });
-
-        mReplies = (RecyclerView) findViewById(R.id.messagesList);
-
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        manager.setReverseLayout(false);
-
-        mReplies.setHasFixedSize(false);
-        mReplies.setLayoutManager(manager);
-
         mReplyQuery = mReplyRef.orderByChild("statusPostID").equalTo(postID);
         mStatusRefQuery = statusRef.orderByChild("postID").equalTo(postID);
 
+
+        mReplies = (RecyclerView) findViewById(R.id.messagesList);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setReverseLayout(false);
+        mReplies.setHasFixedSize(false);
+        mReplies.setLayoutManager(manager);
         replyFirebaseAdapter = new FirebaseRecyclerAdapter<Replies,ReplyViewHolder>(Replies.class, R.layout.replies_card_view, ReplyViewHolder.class, mReplyQuery) {
             public ReplyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -88,21 +77,72 @@ public class ReplyActivity extends AppCompatActivity {
 
             @Override
             public void populateViewHolder(ReplyViewHolder holder, Replies reply, int position) {
-
+                isSender = reply.getName().equals(LogInActivity.personName);
                 holder.setName(reply.getName());
                 holder.setStatus(reply.getStatus());
-                holder.setIsSender(false);
+                holder.setIsSender(isSender);
             }
         };
-
         mReplies.setAdapter(replyFirebaseAdapter);
+
+        // mReplyRef = statusRef.limitToLast(50);
+        mSendButton = (ImageView) findViewById(R.id.ivSend);
+        mSendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                incrementAndPost();
+            }
+        });
+        delete_btn = (Button)findViewById(R.id.delete_btn);
+        delete_btn.setEnabled(isSender);
+        delete_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            mStatusRefQuery.getRef().removeValue();
+            mReplyQuery.getRef().removeValue();
+            }
+        });
+
+
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
         replyFirebaseAdapter.cleanup();
     }
+    public void incrementAndPost(){
+        Firebase ref = mStatusRefQuery.limitToFirst(1).getRef();
 
+        ref.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData currentData) {
+                if (currentData.getValue() == null) {
+                    currentData.setValue(1);
+                } else {
+                    currentData.setValue((Long) currentData.getValue() + 1);
+
+                }
+                return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
+            }
+
+            @Override
+            public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
+
+                Replies reply = new Replies(LogInActivity.personName, LogInActivity.personId, mReplyEdit.getText().toString(), postID);
+                mReplyRef.push().setValue(reply, new Firebase.CompletionListener() {
+                    @Override
+                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                        if (firebaseError != null) {
+                            Log.e("Error", firebaseError.toString());
+                        }
+                    }
+                });
+                mReplyEdit.setText("");
+            }
+        });
+
+    }
 }
 
 //}

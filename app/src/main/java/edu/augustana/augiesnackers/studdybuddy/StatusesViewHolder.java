@@ -50,8 +50,10 @@ public class StatusesViewHolder extends RecyclerView.ViewHolder {
         attending_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                attends++;
-                attending_btn.setText(attends +" Attends");
+                String idString = statusPostId.getText().toString();
+                Long postID = Long.parseLong(idString);
+                statusActivity.incrementAttendees(postID,StatusesViewHolder.this);
+
 //                        Intent intent = new Intent(getApplicationContext(),ReplyActivity.class);
 //                        startActivity(intent);
             }
@@ -71,13 +73,18 @@ public class StatusesViewHolder extends RecyclerView.ViewHolder {
         imageView.setImageResource(id);
     }
 
-public void setPostID(Long id){
+    public void setPostID(Long id){
     statusPostId.setText(id + "");
 }
     public void setReplyButton(Long num){
         if(num > 0){
             reply_btn.setText(num + " replies");
        }
+    }
+    public void setAttends(Long num){
+        if(num > 0){
+            attending_btn.setText(num + " attends");
+        }
     }
 
 }
