@@ -2,7 +2,6 @@ package edu.augustana.augiesnackers.studdybuddy;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -68,9 +67,7 @@ public class StatusesViewHolder extends RecyclerView.ViewHolder {
         description.setText(desc+" "+tag);
     }
 
-    public void setImage(int id) {
-        imageView.setImageResource(id);
-    }
+
 
     public void setPostID(Long id){
     statusPostId.setText(id + "");
