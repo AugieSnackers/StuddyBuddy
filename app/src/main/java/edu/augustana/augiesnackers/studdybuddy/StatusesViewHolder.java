@@ -27,7 +27,7 @@ public class StatusesViewHolder extends RecyclerView.ViewHolder {
     StatusesViewHolder(View itemView, final StatusActivity statusActivity) {
         super(itemView);
         cv = (CardView) itemView.findViewById(R.id.cardView);
-        statusPostId =(TextView)itemView.findViewById(R.id.statusPostIDText);
+        statusPostId = (TextView) itemView.findViewById(R.id.statusPostIDText);
         statusPostId.setVisibility(View.GONE);
         name = (TextView) itemView.findViewById(R.id.title);
         description = (TextView) itemView.findViewById(R.id.description);
@@ -35,12 +35,11 @@ public class StatusesViewHolder extends RecyclerView.ViewHolder {
         reply_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //NEED TOPIC POST ID HERE
-                //postID =
+
                 String idString = statusPostId.getText().toString();
                 Long postID = Long.parseLong(idString);
 
-                statusActivity.openReplies(postID, description.getText().toString(),name.getText().toString());
+                statusActivity.openReplies(postID, description.getText().toString(), name.getText().toString());
 
 
             }
@@ -51,7 +50,7 @@ public class StatusesViewHolder extends RecyclerView.ViewHolder {
             public void onClick(View v) {
                 String idString = statusPostId.getText().toString();
                 Long postID = Long.parseLong(idString);
-                statusActivity.incrementAttendees(postID,StatusesViewHolder.this);
+                statusActivity.incrementAttendees(postID, StatusesViewHolder.this);
 
 //                        Intent intent = new Intent(getApplicationContext(),ReplyActivity.class);
 //                        startActivity(intent);
@@ -65,25 +64,26 @@ public class StatusesViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setDescription(String desc, String tag) {
-        description.setText(desc+" "+tag);
+        description.setText(desc + " " + tag);
     }
 
     public void setImage(int id) {
         imageView.setImageResource(id);
     }
 
-    public void setPostID(Long id){
-    statusPostId.setText(id + "");
-}
-
-
-    public void setReplyButton(Long num){
-        if(num > 0){
-            reply_btn.setText(num + " replies");
-       }
+    public void setPostID(Long id) {
+        statusPostId.setText(id + "");
     }
-    public void setAttends(Long num){
-        if(num > 0){
+
+
+    public void setReplyButton(Long num) {
+        if (num > 0) {
+            reply_btn.setText(num + " replies");
+        }
+    }
+
+    public void setAttends(Long num) {
+        if (num > 0) {
             attending_btn.setText(num + " attends");
         }
     }

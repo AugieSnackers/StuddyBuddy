@@ -20,6 +20,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.MutableData;
 import com.firebase.client.Query;
 import com.firebase.client.Transaction;
+import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 
 public class ReplyActivity extends AppCompatActivity {
@@ -37,59 +38,58 @@ public class ReplyActivity extends AppCompatActivity {
     private Button delete_btn;
     private RecyclerView mReplies;
     boolean isSender;
-    private FirebaseRecyclerAdapter<Replies,ReplyViewHolder> replyFirebaseAdapter;
+    private FirebaseRecyclerAdapter<Replies, ReplyViewHolder> replyFirebaseAdapter;
     private String descUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reply);
-
-
         mReplyEdit = (EditText) findViewById(R.id.etStatus);
-
         Intent intent = getIntent();
-        postID =intent.getLongExtra(StatusActivity.POST_ID, 0L);
+        postID = intent.getLongExtra(StatusActivity.POST_ID, 0L);
         statusText = intent.getStringExtra(StatusActivity.STATUS_POST_DESCRIPTION);
-        descUserName =intent.getStringExtra(StatusActivity.DESC_CREATOR);
-
-        statusTextView = (TextView)findViewById(R.id.statusDescription);
+        descUserName = intent.getStringExtra(StatusActivity.DESC_CREATOR);
+        statusTextView = (TextView) findViewById(R.id.statusDescription);
         statusTextView.setText(statusText);
-
-        nameTextView = (TextView)findViewById(R.id.userName);
+        nameTextView = (TextView) findViewById(R.id.userName);
         nameTextView.setText(descUserName);
+        boolean isSenderClicked = descUserName.equals(LogInActivity.personName);
 
-       boolean isSenderClicked = descUserName.equals(LogInActivity.personName);
 
-        delete_btn = (Button)findViewById(R.id.delete_btn);
+        delete_btn = (Button) findViewById(R.id.delete_btn);
         delete_btn.setEnabled(isSenderClicked);
         delete_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Firebase removeReplyRef = mReplyQuery.getRef();
-                removeReplyRef.removeValue();
+                mStatusRefQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        DataSnapshot firstChild = snapshot.getChildren().iterator().next();
+                        Firebase ref = new Firebase("https://studdy-buddy.firebaseio.com/Status/" + firstChild.getKey());
+                        ref.removeValue();
 
-                mStatusRefQuery.getRef().child("").removeValue();
+                    }
 
-
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+                    }
+                });
                 ReplyActivity.this.finish();
             }
         });
-
         statusRef = new Firebase("https://studdy-buddy.firebaseio.com/Status");
         mReplyRef = new Firebase("https://studdy-buddy.firebaseio.com/Reply");
         mReplyQuery = mReplyRef.orderByChild("statusPostID").equalTo(postID);
-        mStatusRefQuery = statusRef.orderByChild("statusPostID").equalTo(postID);
-
+        mStatusRefQuery = statusRef.orderByChild("postID").equalTo(postID);
 
         mReplies = (RecyclerView) findViewById(R.id.messagesList);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setReverseLayout(false);
         mReplies.setHasFixedSize(false);
         mReplies.setLayoutManager(manager);
-        replyFirebaseAdapter = new FirebaseRecyclerAdapter<Replies,ReplyViewHolder>(Replies.class, R.layout.replies_card_view, ReplyViewHolder.class, mReplyQuery) {
+        replyFirebaseAdapter = new FirebaseRecyclerAdapter<Replies, ReplyViewHolder>(Replies.class, R.layout.replies_card_view, ReplyViewHolder.class, mReplyQuery) {
             public ReplyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
                 View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.replies_card_view, parent, false);
                 ReplyViewHolder holder = new ReplyViewHolder(v);
                 return holder;
@@ -104,8 +104,6 @@ public class ReplyActivity extends AppCompatActivity {
             }
         };
         mReplies.setAdapter(replyFirebaseAdapter);
-
-        // mReplyRef = statusRef.limitToLast(50);
         mSendButton = (ImageView) findViewById(R.id.ivSend);
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,50 +112,50 @@ public class ReplyActivity extends AppCompatActivity {
                 incrementAndPost();
             }
         });
-
-
-
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         replyFirebaseAdapter.cleanup();
     }
 
-
-    public void incrementAndPost(){
-        //TODO NOT WORKING YET
-
-
-        //Firebase ref = new Firebase("https://studdy-buddy.firebaseio.com/Status/" + mStatusRefQuery.getRef().child("numReplies").getKey() + "/numReplies");
-        Firebase ref = new Firebase("https://studdy-buddy.firebaseio.com/Status/-KHcONMcB66wnMh59UzL/numReplies");
-
-        Log.d("Key Value", "" + mStatusRefQuery.getRef().child("numReplies").getKey());
-
-        ref.runTransaction(new Transaction.Handler() {
+    public void incrementAndPost() {
+        mStatusRefQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public Transaction.Result doTransaction(MutableData currentData) {
-                Log.d("Num replies", "" + currentData.getValue());
-                currentData.setValue((Long) currentData.getValue() + 1);
-                return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
-            }
-
-
-            @Override
-            public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
-
-                Replies reply = new Replies(LogInActivity.personName, LogInActivity.personId, mReplyEdit.getText().toString(), postID);
-                mReplyRef.push().setValue(reply, new Firebase.CompletionListener() {
+            public void onDataChange(DataSnapshot snapshot) {
+                DataSnapshot firstChild = snapshot.getChildren().iterator().next();
+                Firebase ref = new Firebase("https://studdy-buddy.firebaseio.com/Status/" + firstChild.getKey() + "/numReplies");
+                ref.runTransaction(new Transaction.Handler() {
                     @Override
-                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                        if (firebaseError != null) {
-                            Log.e("Error", firebaseError.toString());
-                        }
+                    public Transaction.Result doTransaction(MutableData currentData) {
+                        Log.d("Num replies", "" + currentData.getValue());
+                        currentData.setValue((Long) currentData.getValue() + 1);
+                        return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
+                    }
+
+                    @Override
+                    public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
+
+                        Replies reply = new Replies(LogInActivity.personName, LogInActivity.personId, mReplyEdit.getText().toString(), postID);
+                        mReplyRef.push().setValue(reply, new Firebase.CompletionListener() {
+                            @Override
+                            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                if (firebaseError != null) {
+                                    Log.e("Error", firebaseError.toString());
+                                }
+                            }
+                        });
+                        mReplyEdit.setText("");
                     }
                 });
-                mReplyEdit.setText("");
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
             }
         });
+
 
     }
 }

@@ -20,25 +20,27 @@ public class Status {
     Long postID;
     Long numReplies;
     Long numAttendees;
+
     @SuppressWarnings("unused")
-    public Status(){
+    public Status() {
 
     }
 
     /**
      * constructor for the Status class
-     * @param name string that shows name of user
-     * @param uid string that shows the users ID number
-     * @param message string that shows message that was typed by user
-     * @param tag string that shows tag user used
-     * @param postID long integer that shows id for the post
-     * @param numReplies long integer that shows the number of replies the user got from specific post
+     *
+     * @param name         string that shows name of user
+     * @param uid          string that shows the users ID number
+     * @param message      string that shows message that was typed by user
+     * @param tag          string that shows tag user used
+     * @param postID       long integer that shows id for the post
+     * @param numReplies   long integer that shows the number of replies the user got from specific post
      * @param numAttendees long integer that shows the number of users who attended the study session from users post
      */
-    public  Status(String name,String uid,String message, String tag, Long postID, Long numReplies, Long numAttendees){ //add post id pass in later
+    public Status(String name, String uid, String message, String tag, Long postID, Long numReplies, Long numAttendees) { //add post id pass in later
         this.description = message;
         this.name = name;
-        this.tag =tag;
+        this.tag = tag;
         this.uid = uid;
         this.postID = postID;
         this.numReplies = numReplies;
@@ -46,22 +48,31 @@ public class Status {
 
     }
 
-    public String getDescription(){
-        return description;   }
-    public String getName(){
-        return name;   }
-    public String getTag(){
-        return tag;   }
-    public String getUid(){
+    public String getDescription() {
+        return description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public String getUid() {
         return uid;
     }
-    public Long getPostID(){
+
+    public Long getPostID() {
         return postID;
     }
-    public Long getNumReplies(){
+
+    public Long getNumReplies() {
         return numReplies;
     }
-    public Long getNumAttendees(){
+
+    public Long getNumAttendees() {
         return numAttendees;
     }
 

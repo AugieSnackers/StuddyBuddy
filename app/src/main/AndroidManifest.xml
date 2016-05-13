@@ -20,10 +20,11 @@
         </activity>
         <activity
             android:name=".StatusActivity"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ReplyActivity"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+
     </application>
 
 </manifest>

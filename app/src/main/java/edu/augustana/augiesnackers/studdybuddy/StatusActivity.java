@@ -28,9 +28,10 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.MutableData;
 import com.firebase.client.Query;
 import com.firebase.client.Transaction;
+import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 
-public class StatusActivity extends AppCompatActivity{
+public class StatusActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     private Firebase statusRef;
     private EditText sendText;
@@ -43,8 +44,6 @@ public class StatusActivity extends AppCompatActivity{
     final static String DESC_CREATOR ="creator";
     private View popupViewAbout;
     private PopupWindow popupWindowAbout;
-
-
 
 
     FirebaseRecyclerAdapter<Status, StatusesViewHolder> firebaseAdapter;
@@ -86,7 +85,7 @@ public class StatusActivity extends AppCompatActivity{
 
             @Override
             public void populateViewHolder(StatusesViewHolder holder, Status status, int position) {
-               holder.setPostID(status.getPostID());
+                holder.setPostID(status.getPostID());
                 holder.setName(status.getName());
                 holder.setDescription(status.getDescription(),status.getTag());
                 //holder.setImage(R.drawable.ic_facebook);
@@ -120,6 +119,12 @@ public class StatusActivity extends AppCompatActivity{
             showAboutPage();
             return true;
         }
+        //if (id == R.id.search) {
+
+
+            //String tagSearch = search.getQuery();
+            //filter();
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -130,112 +135,143 @@ public class StatusActivity extends AppCompatActivity{
         firebaseAdapter.cleanup();
     }
 
-public void openReplies(Long postID, String description,String creator){
-    Intent intent = new Intent(getApplicationContext(), ReplyActivity.class);
-    intent.putExtra(POST_ID, postID);
-    intent.putExtra(STATUS_POST_DESCRIPTION, description);
-    intent.putExtra(DESC_CREATOR, creator);
-    startActivity(intent);
-}
-public void showAlert(){
-    LayoutInflater li = LayoutInflater.from(this);
-    View promptsView = li.inflate(R.layout.dialog_class_prompt, null);
-    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+    public void openReplies(Long postID, String description, String creator) {
+        Intent intent = new Intent(getApplicationContext(), ReplyActivity.class);
+        intent.putExtra(POST_ID, postID);
+        intent.putExtra(STATUS_POST_DESCRIPTION, description);
+        intent.putExtra(DESC_CREATOR, creator);
+        startActivity(intent);
+    }
 
-    alertDialogBuilder.setView(promptsView);
+    public void showAlert() {
+        LayoutInflater li = LayoutInflater.from(this);
+        View promptsView = li.inflate(R.layout.dialog_class_prompt, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
-    final EditText userInput = (EditText)promptsView.findViewById(R.id.dialog_class_promt_et);
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText userInput = (EditText) promptsView.findViewById(R.id.dialog_class_promt_et);
 
 
-    // set dialog message
-    alertDialogBuilder
-            .setCancelable(false)
-            .setPositiveButton("DONE",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            if (isEntered(userInput)) {
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("DONE",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                if (isEntered(userInput)) {
 
-                                String tag = "#" + userInput.getText();
-                                incrementAndPost(sendText.getText().toString(), tag);
+                                    String tag = "#" + userInput.getText();
+                                    incrementAndPost(sendText.getText().toString(), tag);
 
-                                sendText.setText("");
-                                dialog.dismiss();
+                                    sendText.setText("");
+                                    dialog.dismiss();
+                                }
+                                // get user input and set it to result
+                                // edit text
+
                             }
-                            // get user input and set it to result
-                            // edit text
-
-                        }
-                    });
+                        });
 
 
-    // create alert dialog
-    AlertDialog alertDialog = alertDialogBuilder.create();
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
 
-    // show it
-    alertDialog.show();
+        // show it
+        alertDialog.show();
 
-}
-    public boolean isEntered(EditText passwordText){
-        if(passwordText.getText().toString().trim().length() > 0) {
+    }
+
+    public boolean isEntered(EditText passwordText) {
+        if (passwordText.getText().toString().trim().length() > 0) {
             return true;
         }
         return false;
     }
 
-public void incrementAttendees(Long postID, final StatusesViewHolder holder) {
-    //TODO NOT WORKING
+    public void incrementAttendees(Long postID, final StatusesViewHolder holder) {
 
-    Query mStatusRefQuery = statusRef.orderByChild("postID").equalTo(postID);
-    Firebase ref = mStatusRefQuery.getRef().child("numAttendees");
-    ref.runTransaction(new Transaction.Handler() {
-        @Override
-        public Transaction.Result doTransaction(MutableData currentData) {
-                Log.d("Num Attendees", ""+currentData.getValue());
-            currentData.setValue((Long) currentData.getValue() + 1);
+        Query mStatusRefQuery = statusRef.orderByChild("postID").equalTo(postID);
+        Firebase ref = mStatusRefQuery.getRef().child("numAttendees");
 
-            return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
-        }
 
-        @Override
-        public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
-          Long num = currentData.getValue(Long.class);
-            holder.setAttends(num);
 
-        }
-    });
-}
 
-    public void incrementAndPost(final String description, final String tag){
-        Firebase ref = new Firebase("https://studdy-buddy.firebaseio.com/PostID");
-
-        ref.runTransaction(new Transaction.Handler() {
+        mStatusRefQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public Transaction.Result doTransaction(MutableData currentData) {
-                if(currentData.getValue() == null) {
-                    currentData.setValue(1);
-                } else {
-                    currentData.setValue((Long) currentData.getValue() + 1);
-                    Status.postCount = (Long) currentData.getValue();
-                }
-                return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
-            }
-            @Override
-            public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
+            public void onDataChange(DataSnapshot snapshot) {
+                DataSnapshot firstChild = snapshot.getChildren().iterator().next();
+                Firebase ref = new Firebase("https://studdy-buddy.firebaseio.com/Status/" + firstChild.getKey() + "/numAttendees");
 
-                Status status = new Status(userName, userID, description, tag, Status.postCount, 0L,0L);
-                statusRef.push().setValue(status, new Firebase.CompletionListener() {
+
+
+                ref.runTransaction(new Transaction.Handler() {
                     @Override
-                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                        if (firebaseError != null) {
-                            Log.e("Error", firebaseError.toString());
-                        }
+                    public Transaction.Result doTransaction(MutableData currentData) {
+                        Log.d("Num Attendees", "" + currentData.getValue());
+                        currentData.setValue((Long) currentData.getValue() + 1);
+
+                        return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
                     }
+
+                    @Override
+                    public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
+                        Long num = currentData.getValue(Long.class);
+                        holder.setAttends(num);
+
+                    }
+
+
                 });
+
+                    }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
 
             }
         });
 
-    }
+
+
+
+            }
+
+
+            public void incrementAndPost(final String description, final String tag) {
+                Firebase ref = new Firebase("https://studdy-buddy.firebaseio.com/PostID");
+
+                ref.runTransaction(new Transaction.Handler() {
+                    @Override
+                    public Transaction.Result doTransaction(MutableData currentData) {
+                        if (currentData.getValue() == null) {
+                            currentData.setValue(1);
+                        } else {
+                            currentData.setValue((Long) currentData.getValue() + 1);
+                            Status.postCount = (Long) currentData.getValue();
+                        }
+                        return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
+                    }
+
+                    @Override
+                    public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
+
+                        Status status = new Status(userName, userID, description, tag, Status.postCount, 0L, 0L);
+                        statusRef.push().setValue(status, new Firebase.CompletionListener() {
+                            @Override
+                            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                if (firebaseError != null) {
+                                    Log.e("Error", firebaseError.toString());
+                                }
+                            }
+                        });
+
+                    }
+                });
+
+            }
+
+
 
     private void showAboutPage() {
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout0);
@@ -252,9 +288,7 @@ public void incrementAttendees(Long postID, final StatusesViewHolder holder) {
             }
         });
     }
-
-
-}
+        }
 
 
 
