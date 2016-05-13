@@ -89,7 +89,7 @@ public class StatusActivity extends AppCompatActivity{
                holder.setPostID(status.getPostID());
                 holder.setName(status.getName());
                 holder.setDescription(status.getDescription(),status.getTag());
-                holder.setImage(R.drawable.ic_facebook);
+                //holder.setImage(R.drawable.ic_facebook);
                 holder.setReplyButton(status.getNumReplies());
                 holder.setAttends(status.getNumAttendees());
 

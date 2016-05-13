@@ -20,11 +20,12 @@
         android:layout_alignParentStart="true">
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="16dp" />
+            android:layout_marginRight="16dp"
+            android:src = "@drawable/studdy_buddy_profile"/>
         <TextView
             android:id="@+id/userName"
             android:layout_width="wrap_content"
