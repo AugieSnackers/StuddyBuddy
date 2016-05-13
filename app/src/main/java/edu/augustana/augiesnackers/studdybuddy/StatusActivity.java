@@ -119,12 +119,11 @@ public class StatusActivity extends AppCompatActivity {
             showAboutPage();
             return true;
         }
-        //if (id == R.id.search) {
-
+        if (id == R.id.search) {
 
             //String tagSearch = search.getQuery();
-            //filter();
 
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -192,17 +191,12 @@ public class StatusActivity extends AppCompatActivity {
     public void incrementAttendees(Long postID, final StatusesViewHolder holder) {
 
         Query mStatusRefQuery = statusRef.orderByChild("postID").equalTo(postID);
-        Firebase ref = mStatusRefQuery.getRef().child("numAttendees");
-
-
-
 
         mStatusRefQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 DataSnapshot firstChild = snapshot.getChildren().iterator().next();
                 Firebase ref = new Firebase("https://studdy-buddy.firebaseio.com/Status/" + firstChild.getKey() + "/numAttendees");
-
 
 
                 ref.runTransaction(new Transaction.Handler() {
@@ -224,7 +218,7 @@ public class StatusActivity extends AppCompatActivity {
 
                 });
 
-                    }
+            }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
