@@ -10,13 +10,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -37,6 +41,8 @@ public class StatusActivity extends AppCompatActivity{
     final static String POST_ID ="postid";
     final static String STATUS_POST_DESCRIPTION ="status";
     final static String DESC_CREATOR ="creator";
+    private View popupViewAbout;
+    private PopupWindow popupWindowAbout;
 
 
 
@@ -110,7 +116,8 @@ public class StatusActivity extends AppCompatActivity{
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
+            showAboutPage();
             return true;
         }
 
@@ -228,6 +235,22 @@ public void incrementAttendees(Long postID, final StatusesViewHolder holder) {
             }
         });
 
+    }
+
+    private void showAboutPage() {
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout0);
+        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        popupViewAbout = layoutInflater.inflate(R.layout.activity_about, null);
+        popupWindowAbout = new PopupWindow(popupViewAbout, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        popupWindowAbout.showAtLocation(relativeLayout, Gravity.CENTER, 0, 0);
+
+        Button closeButton = (Button) popupViewAbout.findViewById(R.id.buttonAbout);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindowAbout.dismiss();
+            }
+        });
     }
 
 

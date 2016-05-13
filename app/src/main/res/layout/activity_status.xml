@@ -8,6 +8,7 @@
     android:background="@color/blue_grey_700"
     android:orientation="vertical"
     android:weightSum="4"
+    android:id="@+id/relativeLayout0"
     tools:context=".StatusActivity">
     <include
         layout="@layout/content_status"
