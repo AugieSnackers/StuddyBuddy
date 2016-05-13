@@ -177,23 +177,22 @@ public void showAlert(){
 
 public void incrementAttendees(Long postID, final StatusesViewHolder holder) {
     //TODO NOT WORKING
-    Query mStatusRefQuery = statusRef.orderByChild("postID").equalTo(postID).limitToFirst(1);
-    Firebase ref = mStatusRefQuery.getRef();
+
+    Query mStatusRefQuery = statusRef.orderByChild("postID").equalTo(postID);
+    Firebase ref = mStatusRefQuery.getRef().child("numAttendees");
     ref.runTransaction(new Transaction.Handler() {
         @Override
         public Transaction.Result doTransaction(MutableData currentData) {
-            if (currentData.getValue() == null) {
-                currentData.setValue(1);
-            } else {
-                currentData.setValue((Long) currentData.getValue() + 1);
-            }
+                Log.d("Num Attendees", ""+currentData.getValue());
+            currentData.setValue((Long) currentData.getValue() + 1);
+
             return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
         }
 
         @Override
         public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
-//          Long num = currentData.getValue(Long.class);
-//            holder.setAttends(num);
+          Long num = currentData.getValue(Long.class);
+            holder.setAttends(num);
 
         }
     });

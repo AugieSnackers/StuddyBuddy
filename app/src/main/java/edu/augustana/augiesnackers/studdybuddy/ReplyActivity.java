@@ -25,6 +25,7 @@ import com.firebase.ui.FirebaseRecyclerAdapter;
 public class ReplyActivity extends AppCompatActivity {
     private Firebase statusRef;
     private Firebase mReplyRef;
+
     private Query mReplyQuery;
     private Query mStatusRefQuery;
     private ImageView mSendButton;
@@ -65,8 +66,12 @@ public class ReplyActivity extends AppCompatActivity {
         delete_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mStatusRefQuery.getRef().removeValue();
-                mReplyQuery.getRef().removeValue();
+                Firebase removeReplyRef = mReplyQuery.getRef();
+                removeReplyRef.removeValue();
+
+                mStatusRefQuery.getRef().child("").removeValue();
+
+
                 ReplyActivity.this.finish();
             }
         });
@@ -74,7 +79,7 @@ public class ReplyActivity extends AppCompatActivity {
         statusRef = new Firebase("https://studdy-buddy.firebaseio.com/Status");
         mReplyRef = new Firebase("https://studdy-buddy.firebaseio.com/Reply");
         mReplyQuery = mReplyRef.orderByChild("statusPostID").equalTo(postID);
-        mStatusRefQuery = statusRef.orderByChild("postID").equalTo(postID);
+        mStatusRefQuery = statusRef.orderByChild("statusPostID").equalTo(postID);
 
 
         mReplies = (RecyclerView) findViewById(R.id.messagesList);
@@ -118,21 +123,25 @@ public class ReplyActivity extends AppCompatActivity {
         super.onDestroy();
         replyFirebaseAdapter.cleanup();
     }
+
+
     public void incrementAndPost(){
         //TODO NOT WORKING YET
-        Firebase ref = mStatusRefQuery.limitToFirst(1).getRef();
+
+
+        //Firebase ref = new Firebase("https://studdy-buddy.firebaseio.com/Status/" + mStatusRefQuery.getRef().child("numReplies").getKey() + "/numReplies");
+        Firebase ref = new Firebase("https://studdy-buddy.firebaseio.com/Status/-KHcONMcB66wnMh59UzL/numReplies");
+
+        Log.d("Key Value", "" + mStatusRefQuery.getRef().child("numReplies").getKey());
 
         ref.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData currentData) {
-                if (currentData.getValue() == null) {
-                    currentData.setValue(1);
-                } else {
-                    currentData.setValue((Long) currentData.getValue() + 1);
-
-                }
+                Log.d("Num replies", "" + currentData.getValue());
+                currentData.setValue((Long) currentData.getValue() + 1);
                 return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
             }
+
 
             @Override
             public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {

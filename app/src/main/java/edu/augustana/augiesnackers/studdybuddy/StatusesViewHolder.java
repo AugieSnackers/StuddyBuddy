@@ -75,6 +75,8 @@ public class StatusesViewHolder extends RecyclerView.ViewHolder {
     public void setPostID(Long id){
     statusPostId.setText(id + "");
 }
+
+
     public void setReplyButton(Long num){
         if(num > 0){
             reply_btn.setText(num + " replies");
@@ -85,5 +87,6 @@ public class StatusesViewHolder extends RecyclerView.ViewHolder {
             attending_btn.setText(num + " attends");
         }
     }
+
 
 }
