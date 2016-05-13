@@ -35,8 +35,9 @@ public class ReplyActivity extends AppCompatActivity {
     private String statusText;
     private Button delete_btn;
     private RecyclerView mReplies;
-    boolean isSender=false;
+    boolean isSender;
     private FirebaseRecyclerAdapter<Replies,ReplyViewHolder> replyFirebaseAdapter;
+    private String descUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +50,26 @@ public class ReplyActivity extends AppCompatActivity {
         Intent intent = getIntent();
         postID =intent.getLongExtra(StatusActivity.POST_ID, 0L);
         statusText = intent.getStringExtra(StatusActivity.STATUS_POST_DESCRIPTION);
+        descUserName =intent.getStringExtra(StatusActivity.DESC_CREATOR);
 
         statusTextView = (TextView)findViewById(R.id.statusDescription);
         statusTextView.setText(statusText);
 
         nameTextView = (TextView)findViewById(R.id.userName);
-        nameTextView.setText(LogInActivity.personName);
+        nameTextView.setText(descUserName);
+
+       boolean isSenderClicked = descUserName.equals(LogInActivity.personName);
+
+        delete_btn = (Button)findViewById(R.id.delete_btn);
+        delete_btn.setEnabled(isSenderClicked);
+        delete_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mStatusRefQuery.getRef().removeValue();
+                mReplyQuery.getRef().removeValue();
+                ReplyActivity.this.finish();
+            }
+        });
 
         statusRef = new Firebase("https://studdy-buddy.firebaseio.com/Status");
         mReplyRef = new Firebase("https://studdy-buddy.firebaseio.com/Reply");
@@ -94,15 +109,7 @@ public class ReplyActivity extends AppCompatActivity {
                 incrementAndPost();
             }
         });
-        delete_btn = (Button)findViewById(R.id.delete_btn);
-        delete_btn.setEnabled(isSender);
-        delete_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            mStatusRefQuery.getRef().removeValue();
-            mReplyQuery.getRef().removeValue();
-            }
-        });
+
 
 
     }
@@ -112,6 +119,7 @@ public class ReplyActivity extends AppCompatActivity {
         replyFirebaseAdapter.cleanup();
     }
     public void incrementAndPost(){
+        //TODO NOT WORKING YET
         Firebase ref = mStatusRefQuery.limitToFirst(1).getRef();
 
         ref.runTransaction(new Transaction.Handler() {

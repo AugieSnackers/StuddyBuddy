@@ -6,21 +6,21 @@ package edu.augustana.augiesnackers.studdybuddy;
 public class Replies {
     String status;
     String name;
-    String uid;
+    String userId;
     Long statusPostID;
 
 
-    //private TopicPost postTopic;
+
 
     // Required default constructor for Firebase object mapping
    @SuppressWarnings("unused")
     public Replies() {
     }
 
-    public Replies(String name, String uid, String message, Long statusPostID) {
+    public Replies(String name, String userId, String message, Long statusPostID) {
         this.status = message;
         this.name = name;
-        this.uid = uid;
+        this.userId = userId;
         this.statusPostID = statusPostID;
 
     }
@@ -31,8 +31,8 @@ public class Replies {
     public String getName() {
         return name;
     }
-    public String getUid() {
-        return uid;
+    public String getUserId() {
+        return userId;
     }
     public Long getStatusPostID(){
         return statusPostID;

@@ -36,6 +36,7 @@ public class StatusActivity extends AppCompatActivity implements SearchView.OnQu
     private String userID;
     final static String POST_ID ="postid";
     final static String STATUS_POST_DESCRIPTION ="status";
+    final static String DESC_CREATOR ="creator";
 
 
 
@@ -51,8 +52,6 @@ public class StatusActivity extends AppCompatActivity implements SearchView.OnQu
 //        setSupportActionBar(toolbar);
 
         sendText = (EditText) findViewById(R.id.etStatus);
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
         userName = LogInActivity.personName;
         userID = LogInActivity.personId;
         sendbtn = (ImageView) findViewById(R.id.ivSend);
@@ -139,10 +138,11 @@ public class StatusActivity extends AppCompatActivity implements SearchView.OnQu
         firebaseAdapter.cleanup();
     }
 
-public void openReplies(Long postID, String description){
+public void openReplies(Long postID, String description,String creator){
     Intent intent = new Intent(getApplicationContext(), ReplyActivity.class);
     intent.putExtra(POST_ID, postID);
     intent.putExtra(STATUS_POST_DESCRIPTION, description);
+    intent.putExtra(DESC_CREATOR, creator);
     startActivity(intent);
 }
 public void showAlert(){

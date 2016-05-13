@@ -27,8 +27,8 @@ public class StatusesViewHolder extends RecyclerView.ViewHolder {
     StatusesViewHolder(View itemView, final StatusActivity statusActivity) {
         super(itemView);
         cv = (CardView) itemView.findViewById(R.id.cardView);
-       statusPostId =(TextView)itemView.findViewById(R.id.statusPostIDText);
-
+        statusPostId =(TextView)itemView.findViewById(R.id.statusPostIDText);
+        statusPostId.setVisibility(View.GONE);
         name = (TextView) itemView.findViewById(R.id.title);
         description = (TextView) itemView.findViewById(R.id.description);
         reply_btn = (Button) itemView.findViewById(R.id.reply_btn);
@@ -39,9 +39,8 @@ public class StatusesViewHolder extends RecyclerView.ViewHolder {
                 //postID =
                 String idString = statusPostId.getText().toString();
                 Long postID = Long.parseLong(idString);
-                Log.d("PostID StatusViewHolder", "" + postID);
 
-                statusActivity.openReplies(postID, description.getText().toString());
+                statusActivity.openReplies(postID, description.getText().toString(),name.getText().toString());
 
 
             }
