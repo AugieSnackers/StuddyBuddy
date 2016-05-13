@@ -26,7 +26,7 @@ import com.firebase.client.Query;
 import com.firebase.client.Transaction;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 
-public class StatusActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
+public class StatusActivity extends AppCompatActivity{
     RecyclerView recyclerView;
     private Firebase statusRef;
     private EditText sendText;
@@ -98,24 +98,9 @@ public class StatusActivity extends AppCompatActivity implements SearchView.OnQu
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setOnQueryTextListener(this);
         return true;
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        // User pressed the search button
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        // User changed the text
-        return false;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
