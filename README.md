@@ -3,6 +3,8 @@ Studdy buddy is an app that lets you know what your friends/colleagues are study
   where they can post what they are studying using # followed by their class number.  Users have the option to filter 
   what appears on their news feed to search for a specific class.  
   
+Studdy buddy 
+  
   
   
   
