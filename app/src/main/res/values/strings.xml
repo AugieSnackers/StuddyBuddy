@@ -51,4 +51,11 @@
     <string name="team_members">Scott Doberstein\nNelly Cheboi\nAlex Jelinek\nChristopher Green\nKaylee Nolan</string>
     <string name="team_name">Augie Snackers</string>
     <string name="graphics_credit">Graphics: Alex Jelinek, Kaylee Nolan</string>
+
+
+    <!-- SEARCH BAR -->
+    <string name="search_hint">Search by tag</string>
+    <string name="title_activity_search_results">SearchResultsActivity</string>
+
+
 </resources>
