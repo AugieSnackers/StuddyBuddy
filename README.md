@@ -9,8 +9,8 @@ Studdy buddy
   
   
   
-  Kaylee - default profile design, layout work, 
-  Alex - logo design, layout work, toolbar implementation, 
-  Nelly-
-  Chris-
-  Scott- 
+  Kaylee - default profile design, layout work
+  Alex - logo design, layout work, toolbar implementation, search bar layout
+  Nelly- Core programming, StatusActivity, Login Activity
+  Chris- About screen
+  Scott- ReplyActivity, StatusActivity, Frebase functionality and queries, delete, postID
