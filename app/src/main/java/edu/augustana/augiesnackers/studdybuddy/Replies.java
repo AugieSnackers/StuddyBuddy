@@ -39,6 +39,12 @@ public class Replies {
         return name;
     }
 
+    public String getUserId() {
+        return userId;
+    }
 
+    public Long getStatusPostID() {
+        return statusPostID;
+    }
 
 }
