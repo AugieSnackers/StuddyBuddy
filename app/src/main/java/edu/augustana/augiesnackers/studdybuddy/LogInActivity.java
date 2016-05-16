@@ -29,7 +29,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     private static final int RC_SIGN_IN = 9001;
     private TextView mStatusTextView;
     public static String personName;
-   public static String personEmail;
+    public static String personEmail;
     public static String personId;
     private GoogleApiClient mGoogleApiClient;
     private ProgressDialog mProgressDialog;
@@ -234,8 +234,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             mProgressDialog.hide();
         }
     }
-
-
 
 
 }

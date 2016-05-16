@@ -10,18 +10,17 @@ public class Replies {
     Long statusPostID;
 
 
-
-
     // Required default constructor for Firebase object mapping
-   @SuppressWarnings("unused")
+    @SuppressWarnings("unused")
     public Replies() {
     }
 
     /**
      * constructor for Replies class
-     * @param name string representing user name
-     * @param userId string representing users ID
-     * @param message string representing what text the user is posting
+     *
+     * @param name         string representing user name
+     * @param userId       string representing users ID
+     * @param message      string representing what text the user is posting
      * @param statusPostID Long integer representing the ID for the post
      */
     public Replies(String name, String userId, String message, Long statusPostID) {
@@ -35,13 +34,16 @@ public class Replies {
     public String getStatus() {
         return status;
     }
+
     public String getName() {
         return name;
     }
+
     public String getUserId() {
         return userId;
     }
-    public Long getStatusPostID(){
+
+    public Long getStatusPostID() {
         return statusPostID;
     }
 

@@ -11,7 +11,7 @@ import android.widget.TextView;
 /**
  * Created by Nelly on 5/9/2016.
  */
-public class ReplyViewHolder extends RecyclerView.ViewHolder{
+public class ReplyViewHolder extends RecyclerView.ViewHolder {
     View mView;
 
     public ReplyViewHolder(View itemView) {
@@ -38,7 +38,6 @@ public class ReplyViewHolder extends RecyclerView.ViewHolder{
             messageContainer.setGravity(Gravity.LEFT);
         }
     }
-
 
 
     public void setName(String name) {
