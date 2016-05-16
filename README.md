@@ -13,4 +13,4 @@ Studdy buddy
   Alex - logo design, layout work, toolbar implementation, search bar layout
   Nelly- Core programming, StatusActivity, Login Activity
   Chris- About screen
-  Scott- ReplyActivity, StatusActivity, Frebase functionality and queries, delete, postID
+  Scott- ReplyActivity, StatusActivity, Firebase functionality and queries, delete, postID
