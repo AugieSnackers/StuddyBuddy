@@ -1,7 +1,7 @@
 package edu.augustana.augiesnackers.studdybuddy;
 
 /**
- * Adapted by Scott Doberstein
+ * author Scott Doberstein
  */
 public class Replies {
     String status;
@@ -39,12 +39,6 @@ public class Replies {
         return name;
     }
 
-    public String getUserId() {
-        return userId;
-    }
 
-    public Long getStatusPostID() {
-        return statusPostID;
-    }
 
 }

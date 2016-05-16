@@ -1,16 +1,13 @@
 package edu.augustana.augiesnackers.studdybuddy;
 
-import android.app.SearchManager;
-import android.content.Context;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -33,30 +30,37 @@ import com.firebase.client.Transaction;
 import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 
+/**
+ * author Nelly and Scott
+ * This class displays the statuses in a card view, it uses recycleview, card view and firebase adapter from the Firebase UI library
+ */
 public class StatusActivity extends AppCompatActivity {
-    RecyclerView recyclerView;
+
+
     private Firebase statusRef;
+    private Query mStatusQuery;
+
     private EditText sendText;
     private ImageView sendbtn;
-    private Query mStatusQuery;
+
     private String userName;
     private String userID;
+
+    //for intents
     final static String POST_ID ="postid";
     final static String STATUS_POST_DESCRIPTION ="status";
     final static String DESC_CREATOR ="creator";
+
     private View popupViewAbout;
     private PopupWindow popupWindowAbout;
 
-
+    RecyclerView recyclerView;
     FirebaseRecyclerAdapter<Status, StatusesViewHolder> firebaseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_status);
-        //TODO
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
 
         sendText = (EditText) findViewById(R.id.etStatus);
         userName = LogInActivity.personName;
@@ -76,7 +80,14 @@ public class StatusActivity extends AppCompatActivity {
 
         statusRef = new Firebase("https://studdy-buddy.firebaseio.com/Status");
         mStatusQuery= statusRef.limitToLast(10);
+        //firebaseAdapter of the Firebase UI library conveniently populates the card as desired.
         firebaseAdapter = new FirebaseRecyclerAdapter<Status, StatusesViewHolder>(Status.class, R.layout.status_card_view, StatusesViewHolder.class, mStatusQuery) {
+            /**
+             * define each card
+             * @param parent
+             * @param viewType
+             * @return
+             */
             @Override
             public StatusesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -85,12 +96,17 @@ public class StatusActivity extends AppCompatActivity {
                 return holder;
             }
 
+            /**
+             * populates the members of various cards
+             * @param holder
+             * @param status
+             * @param position
+             */
             @Override
             public void populateViewHolder(StatusesViewHolder holder, Status status, int position) {
                 holder.setPostID(status.getPostID());
                 holder.setName(status.getName());
                 holder.setDescription(status.getDescription(),status.getTag());
-                //holder.setImage(R.drawable.ic_facebook);
                 holder.setReplyButton(status.getNumReplies());
                 holder.setAttends(status.getNumAttendees());
 
@@ -105,17 +121,12 @@ public class StatusActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
-
         return true;
-    }
+
+        }
+
+
+
 
 
     @Override
@@ -130,11 +141,7 @@ public class StatusActivity extends AppCompatActivity {
             showAboutPage();
             return true;
         }
-        if (id == R.id.search) {
 
-            //String tagSearch = search.getQuery();
-
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -145,6 +152,12 @@ public class StatusActivity extends AppCompatActivity {
         firebaseAdapter.cleanup();
     }
 
+    /**
+     * called by the StatusesViewHolder, to sart the reply activity when the reply button is pressed
+     * @param postID
+     * @param description
+     * @param creator
+     */
     public void openReplies(Long postID, String description, String creator) {
         Intent intent = new Intent(getApplicationContext(), ReplyActivity.class);
         intent.putExtra(POST_ID, postID);
@@ -153,6 +166,9 @@ public class StatusActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * requres the user to enter the class id for the particular post
+     */
     public void showAlert() {
         LayoutInflater li = LayoutInflater.from(this);
         View promptsView = li.inflate(R.layout.dialog_class_prompt, null);
@@ -192,6 +208,11 @@ public class StatusActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Check whether the post was entered
+     * @param passwordText
+     * @return
+     */
     public boolean isEntered(EditText passwordText) {
         if (passwordText.getText().toString().trim().length() > 0) {
             return true;
@@ -199,6 +220,11 @@ public class StatusActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * increment the number of attendees to a particular discussion
+     * @param postID
+     * @param holder
+     */
     public void incrementAttendees(Long postID, final StatusesViewHolder holder) {
 
         Query mStatusRefQuery = statusRef.orderByChild("postID").equalTo(postID);
@@ -213,7 +239,7 @@ public class StatusActivity extends AppCompatActivity {
                 ref.runTransaction(new Transaction.Handler() {
                     @Override
                     public Transaction.Result doTransaction(MutableData currentData) {
-                        Log.d("Num Attendees", "" + currentData.getValue());
+
                         currentData.setValue((Long) currentData.getValue() + 1);
 
                         return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
@@ -242,7 +268,11 @@ public class StatusActivity extends AppCompatActivity {
 
             }
 
-
+    /**
+     * increment the number of posts in the database before pushing the posts to the database
+     * @param description, the status
+     * @param tag, the class/course
+     */
             public void incrementAndPost(final String description, final String tag) {
                 Firebase ref = new Firebase("https://studdy-buddy.firebaseio.com/PostID");
 
@@ -277,7 +307,9 @@ public class StatusActivity extends AppCompatActivity {
             }
 
 
-
+    /**
+     * pop up window with the details of the developers
+     */
     private void showAboutPage() {
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout0);
         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);

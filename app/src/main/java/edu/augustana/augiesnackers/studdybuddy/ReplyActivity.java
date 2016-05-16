@@ -23,42 +23,61 @@ import com.firebase.client.Transaction;
 import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 
+/**
+ * This class creates and saves the replies to particular statuses. It uses the firebaseadapter from the Firebase UI library along with card and recycle views
+ *
+ * @author Nelly and Scott
+ */
 public class ReplyActivity extends AppCompatActivity {
     private Firebase statusRef;
     private Firebase mReplyRef;
 
     private Query mReplyQuery;
     private Query mStatusRefQuery;
+
     private ImageView mSendButton;
     private EditText mReplyEdit;
-    private Long postID;
     private TextView statusTextView;
     private TextView nameTextView;
-    private String statusText;
     private Button delete_btn;
+
+    private String statusText;
+    private Long postID;
+    private String postUserName;
+
     private RecyclerView mReplies;
-    boolean isSender;
     private FirebaseRecyclerAdapter<Replies, ReplyViewHolder> replyFirebaseAdapter;
-    private String descUserName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reply);
-        mReplyEdit = (EditText) findViewById(R.id.etStatus);
+
+        //Extract data sent over from status activity class
         Intent intent = getIntent();
         postID = intent.getLongExtra(StatusActivity.POST_ID, 0L);
         statusText = intent.getStringExtra(StatusActivity.STATUS_POST_DESCRIPTION);
-        descUserName = intent.getStringExtra(StatusActivity.DESC_CREATOR);
+        postUserName = intent.getStringExtra(StatusActivity.DESC_CREATOR);
+
         statusTextView = (TextView) findViewById(R.id.statusDescription);
         statusTextView.setText(statusText);
         nameTextView = (TextView) findViewById(R.id.userName);
-        nameTextView.setText(descUserName);
-        boolean isSenderClicked = descUserName.equals(LogInActivity.personName);
+        nameTextView.setText(postUserName);
+        mReplyEdit = (EditText) findViewById(R.id.etStatus);
 
+        //is it the creator of the post replying to their own post
+        boolean isSenderClicked = postUserName.equals(LogInActivity.personName);
 
+//whether or not to display the delete button
         delete_btn = (Button) findViewById(R.id.delete_btn);
-        delete_btn.setEnabled(isSenderClicked);
+        if (isSenderClicked) {
+            delete_btn.setVisibility(View.VISIBLE);
+        } else {
+            delete_btn.setVisibility(View.GONE);
+        }
+
+//deletes the status and all the replies to that status
         delete_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,7 +99,9 @@ public class ReplyActivity extends AppCompatActivity {
         });
         statusRef = new Firebase("https://studdy-buddy.firebaseio.com/Status");
         mReplyRef = new Firebase("https://studdy-buddy.firebaseio.com/Reply");
+        //get reply with the given post id
         mReplyQuery = mReplyRef.orderByChild("statusPostID").equalTo(postID);
+        //get status with the given post iid
         mStatusRefQuery = statusRef.orderByChild("postID").equalTo(postID);
 
         mReplies = (RecyclerView) findViewById(R.id.messagesList);
@@ -88,6 +109,9 @@ public class ReplyActivity extends AppCompatActivity {
         manager.setReverseLayout(false);
         mReplies.setHasFixedSize(false);
         mReplies.setLayoutManager(manager);
+
+        //fill the recycle view with the replies, putting the one send by the creator on the right and the one send by others on the left
+        //Uses FirebaseAdapter from the FirabaseUI library
         replyFirebaseAdapter = new FirebaseRecyclerAdapter<Replies, ReplyViewHolder>(Replies.class, R.layout.replies_card_view, ReplyViewHolder.class, mReplyQuery) {
             public ReplyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.replies_card_view, parent, false);
@@ -97,7 +121,7 @@ public class ReplyActivity extends AppCompatActivity {
 
             @Override
             public void populateViewHolder(ReplyViewHolder holder, Replies reply, int position) {
-                isSender = reply.getName().equals(LogInActivity.personName);
+                boolean isSender = reply.getName().equals(LogInActivity.personName);
                 holder.setName(reply.getName());
                 holder.setStatus(reply.getStatus());
                 holder.setIsSender(isSender);
@@ -114,14 +138,21 @@ public class ReplyActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * clear the recycle view
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         replyFirebaseAdapter.cleanup();
     }
 
+    /**
+     * increment the number of replies for a particular post and  post the current reply
+     */
     public void incrementAndPost() {
         mStatusRefQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 DataSnapshot firstChild = snapshot.getChildren().iterator().next();

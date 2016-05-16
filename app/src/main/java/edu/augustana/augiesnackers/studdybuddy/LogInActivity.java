@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.firebase.client.Firebase;
+
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -24,7 +24,12 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
-//https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/SignInActivity.java#L51-L55
+/**
+ * This class signs the user in using google credentials most of code was copied from this tutorial
+ * Modified by Nelly Cheboi
+ * https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples/quickstart/signin/SignInActivity.java#L51-L55
+ */
+
 public class LogInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private static final int RC_SIGN_IN = 9001;
     private TextView mStatusTextView;
@@ -54,17 +59,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         // options specified by gso.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-//                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-//                    @Override
-//                    public void onConnected(Bundle bundle) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onConnectionSuspended(int i) {
-//
-//                    }
-//                })
                 .build();
 
 
@@ -75,7 +69,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View v) {
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-                Log.d("LOG IN", "LOGGED");
                 startActivityForResult(signInIntent, RC_SIGN_IN);
 
             }
@@ -102,10 +95,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), StatusActivity.class);
-//                Bundle extras = new Bundle();
-//                //extras.putString(USER_NAME,personName);
-//                //extras.putString(USER_ID,personId);
-//                intent.putExtras(extras);
                 startActivity(intent);
 
 
@@ -153,7 +142,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         mGoogleApiClient.disconnect();
     }
 
-    //connection failed, log in manually
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
@@ -185,9 +173,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             handleSignInResult(result);
         }
     }
-    // [END onActivityResult]
 
-    // [START handleSignInResult]
     private void handleSignInResult(GoogleSignInResult result) {
 
         if (result.isSuccess()) {
@@ -206,7 +192,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-    //change the mainpage to whatver the status of the app is, signed in or not
+    //change the mainpage to whatever the status of the app is, signed in or not
     private void updateUI(boolean signedIn) {
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
@@ -218,7 +204,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
         }
     }
-
+//only runs when the user is not logged in to google in their device
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);

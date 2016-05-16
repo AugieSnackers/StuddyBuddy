@@ -8,6 +8,7 @@ import com.firebase.client.Transaction;
 
 /**
  * Created by Nelly on 4/28/2016.
+ * status class with members of the particular class
  */
 public class Status {
 

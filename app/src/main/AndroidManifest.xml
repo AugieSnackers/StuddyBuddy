@@ -27,15 +27,6 @@
         </activity>
 
 
-
-
-        <activity
-            android:name=".SearchResultsActivity"
-            android:label="@string/title_activity_search_results">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".StatusActivity"
             android:theme="@style/AppTheme" />

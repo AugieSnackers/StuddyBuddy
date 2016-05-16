@@ -44,16 +44,6 @@
             android:layout_toRightOf="@+id/imageView"
             android:text="Description"
             android:textColor="@android:color/primary_text_dark_nodisable" />
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:text="edit"
-            android:id="@+id/edit_btn"
-            android:theme="@style/ThemeOverlay.MyDarkButton"
-            android:layout_below="@+id/statusDescription"
-            android:layout_centerHorizontal="true"
-            android:textColor="#000000" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -62,9 +52,9 @@
             android:text="delete"
             android:id="@+id/delete_btn"
             android:theme="@style/ThemeOverlay.MyDarkButton"
-            android:layout_alignTop="@+id/edit_btn"
             android:layout_alignParentEnd="true"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:layout_below="@+id/statusDescription" />
 
 
     </RelativeLayout>

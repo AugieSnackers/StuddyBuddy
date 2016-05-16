@@ -9,27 +9,35 @@ import android.widget.TextView;
 
 /**
  * Created by Nelly on 4/29/2016.
+ * this class is used contain the instance of each card. Needed especially when populating the views of this card with the corresponding details
  */
+
 public class StatusesViewHolder extends RecyclerView.ViewHolder {
 
     private CardView cv;
-    TextView name;
-    TextView description;
-    TextView statusPostId;
-    ImageView imageView;
+
+    private TextView name;
+    private TextView description;
+    private TextView statusPostId;
+    private ImageView imageView;
+
     private Button attending_btn;
     private Button reply_btn;
-    private Long replies;
-    private Long attends;
+
 
 
     StatusesViewHolder(View itemView, final StatusActivity statusActivity) {
         super(itemView);
+
         cv = (CardView) itemView.findViewById(R.id.cardView);
+        //post id
         statusPostId = (TextView) itemView.findViewById(R.id.statusPostIDText);
         statusPostId.setVisibility(View.GONE);
+        //creator
         name = (TextView) itemView.findViewById(R.id.title);
+        //status
         description = (TextView) itemView.findViewById(R.id.description);
+
         reply_btn = (Button) itemView.findViewById(R.id.reply_btn);
         reply_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,8 +59,7 @@ public class StatusesViewHolder extends RecyclerView.ViewHolder {
                 Long postID = Long.parseLong(idString);
                 statusActivity.incrementAttendees(postID, StatusesViewHolder.this);
 
-//                        Intent intent = new Intent(getApplicationContext(),ReplyActivity.class);
-//                        startActivity(intent);
+
             }
         });
         imageView = (ImageView) itemView.findViewById(R.id.imageView);
