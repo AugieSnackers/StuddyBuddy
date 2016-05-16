@@ -1,4 +1,5 @@
 <resources>
+    <!--Adapted from https://github.com/googlesamples/google-services/blob/master/android/signin/app/src/main/java/com/google/samples-->
     <string name="app_name">Studdy Buddy</string>
     <string name="action_about">About</string>
     <string name="server_client_id">811543573577-pd58ar8j2svhah24ogqgeis0s3d3kuse.apps.googleusercontent.com</string>
